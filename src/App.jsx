@@ -2,20 +2,19 @@
 import Header from "./components/Header.jsx";
 import Main from "./pages/Main.jsx";
 import Footer from "./components/Footer.jsx";
-import './App.css'
+// import './App.css'
 
-function App() {
+const App = () => {
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
     <Header />
       <h1>Xrpl Wallet v1.0</h1>
-      <main>
-        <Main />
-      </main>
+      <Main />
       <Footer />
-    </>
+    </div>
   )
 }
 
 export default App
+
