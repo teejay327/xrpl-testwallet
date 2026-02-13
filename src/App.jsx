@@ -1,8 +1,6 @@
-//import { useState } from 'react'
 import Header from "./components/Header.jsx";
-import Main from "./pages/Main.jsx";
+import Home from "./pages/Home.jsx";
 import Footer from "./components/Footer.jsx";
-// import './App.css'
 
 const App = () => {
 
@@ -10,11 +8,10 @@ const App = () => {
     <div className="min-h-screen flex flex-col">
     <Header />
       <h1>Xrpl Wallet v1.0</h1>
-      <Main />
+      <Home />
       <Footer />
     </div>
   )
 }
 
-export default App
-
+export default App;
