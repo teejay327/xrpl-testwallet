@@ -6,7 +6,7 @@ const base =
   "disabled:opacity-50 disabled:pointer-events-none"
 
 const variants = {
-  primary: "bg-emerald-500 text-slate-950 hover:bg-emerald-400",
+  primary: "bg-emerald-500 text-slate-950 hover:bg-emerald-400 shadow-lg shadow-emerald-500/20",
   secondary: "bg-slate-800 text-slate-100 hover:bg-slate-700 border border-slate-700",
   ghost: "bg-transparent text-slate-100 hover:bg-slate-800/60",
   danger: "bg-rose-600 text-white hover:bg-rose-500"
