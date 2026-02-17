@@ -21,14 +21,25 @@ const Header = () => {
             XRPL Wallet <span className="text-emerald-400">Testnet</span>
           </span>
         </h1>
-      </div>
 
-      <nav className="flex items-center gap-6">
-        <NavLink>
-          exit
-          
-        </NavLink>
-      </nav>
+        <nav className="flex items-center gap-6">
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) => isActive ? `${linkBase} ${linkActive}` : linkBase }
+          >
+            Dashboard
+          </NavLink>
+
+          <NavLink
+            to="/accounts"
+            className={({ isActive }) => isActive ? `${linkBase} ${linkActive}` : linkBase
+            }
+          >
+            Accounts
+          </NavLink>
+        </nav>
+      </div>
 
       <Button variant="secondary" size="sm">
         Connect
