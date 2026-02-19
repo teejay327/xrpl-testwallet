@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/Card.jsx";
+import Card, { CardHeader, CardTitle, CardContent } from "../components/ui/Card.jsx";
 
 const Accounts = () => {
 
@@ -16,3 +16,5 @@ const Accounts = () => {
     </div>
   )
 }
+
+export default Accounts;

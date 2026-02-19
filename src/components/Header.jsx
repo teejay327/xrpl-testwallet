@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWallet } from "@fortawesome/free-solid-svg-icons";
 
 const linkBase = "text-sm font-semibold text-slate-300 transition";
-const linkAcrtive = "text-emerald-400";
+const linkActive = "text-emerald-400";
 
 
 const Header = () => {

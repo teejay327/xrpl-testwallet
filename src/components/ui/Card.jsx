@@ -17,13 +17,13 @@ const Card = ({ className, children, ...props }) => {
 
 const CardHeader = ({ className, children, ...props }) => {
   return (
-    <div className={cn("p-4 pb-2", className)}  {...props}>
+    <div className={cn("p-4 pb-2", className)} {...props}>
       {children}
     </div>
   );
 };
 
-const CardTitle = ({ }) => {
+const CardTitle = ({ className, children, ...props }) => {
   return (
     <h2
       className={cn("text-lg font-bold text-slate-100", className)}
@@ -55,7 +55,7 @@ const CardContent = ({ className, children, ...props }) => {
   )
 };
 
-const CardFooter = ({ }) => {
+const CardFooter = ({ className, children, ...props }) => {
   return (
     <div
       className={cn("p-4 pt-2 flex items-center gap-3",  className)}

@@ -13,3 +13,5 @@ const AppShell = () => {
     </Layout>
   )
 }
+
+export default AppShell;

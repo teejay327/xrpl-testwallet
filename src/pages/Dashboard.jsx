@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "../components/ui/Card.jsx";
+import Card, { CardHeader, CardTitle, CardContent, CardFooter } from "../components/ui/Card.jsx";
 
 const Dashboard = () => {
   return (
