@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/Card.";
+import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/Card.jsx";
 
 const Accounts = () => {
 
@@ -11,6 +11,7 @@ const Accounts = () => {
         <CardContent className="text-slate-300">
           Your XRPL accounts
         </CardContent>
+        <CardFooter/>
       </Card>
     </div>
   )
