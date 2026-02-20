@@ -12,10 +12,12 @@
     "@fortawesome/free-solid-svg-icons": "^7.2.0",
     "@fortawesome/react-fontawesome": "^3.2.0",
     "@tailwindcss/vite": "^4.1.18",
+    "clsx": "^2.1.1",
     "prettier": "^3.8.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.13.0",
+    "tailwind-merge": "^3.5.0",
     "xrpl": "^4.5.0"
   },
   "devDependencies": {
