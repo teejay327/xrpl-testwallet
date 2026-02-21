@@ -23,7 +23,19 @@ const WalletProvider = ({ children }) => {
     }
   }, []);
 
+  // Persist
+  useEffect(() => {
+    localStorage.setItem(LS_ACCOUNTS, JSON.strongify(accounts));
+  }, [accounts]);
+
+  useEffect(() => {
+    if (activeId) localStorage.setItem(LS_ACTIVE, activeId);
+  }, [activeId]);
+
+  const activeAccount = useMemo(() => accounts.find((a) => a.id === activeId) 
+    || null, [accounts, activeId]);
   
+
 };
 
 export default WalletProvider;
