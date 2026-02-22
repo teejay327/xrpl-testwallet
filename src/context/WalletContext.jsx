@@ -35,7 +35,35 @@ const WalletProvider = ({ children }) => {
   const activeAccount = useMemo(() => accounts.find((a) => a.id === activeId) 
     || null, [accounts, activeId]);
   
+  
+  const addAccount = (account) => {
+    setAccounts((prev) => {
+      const next = [account, ...prev];
+      return next;
+    });
+    setActiveId(account.id);
+  };
 
+  const removeAccount = (id) => {
+    setAccounts((prev) => prev.filter((a) => a.id !== id));
+    setActiveId((prev) => (prev === id ? null : prev));
+  };
+
+
+  const selectAccount = (id) => setActiveId(id);
+
+  return (
+    <WalletContext.Provider
+      value={{ accounts, activeAccount, activeId, addAccount, removeAccount, selectAccount }}
+    >
+      {children}
+    </WalletContext.Provider>
+  );
 };
 
+export const useWallet = () => {
+  const ctx = useContext(WalletContext);
+  if (!ctx) throw new Error("useWallet must be used within <WalletProvider>");
+  return ctx;
+}
 export default WalletProvider;
