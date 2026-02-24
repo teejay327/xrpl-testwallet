@@ -55,8 +55,39 @@ const Accounts = () => {
           <CardTitle>Saved accounts</CardTitle>
         </CardHeader>
 
+        <CardContent className="grid gap-2">
+          { accounts.length === 0 && (
+            <div className="text-sm text-slate-300">No accounts yet - please add one above</div>
+          )}
 
-        
+          {accounts.map((a) => {
+            const active = a.id === activeId;
+            return(
+              <div
+                key={a.id}
+                className={
+                  "flex items-center justify-between rounded-lg border p-3 " +
+                  (active ? "border-emerald-500/60 bg-emerald-500/10" : "border-slate-800 bg-slate-900/30")
+                }
+              >
+                <button
+                  className="text-left"
+                  onClick={() => selectAccount(a.id)}
+                  title="Select this account"
+                >
+                  <div className="font-semibold text-slate-100">
+                    {a.label} {active && <span className="ml-2 text-emerald-400 text-xs">(active)</span>}  
+                  </div>
+                  <div className="text-xs text-slate-300">{short(a.address)}</div>
+                </button>
+
+                <Button variant="ghost" size="sm" onClick={() => removeAccount(a.id)}>
+                  Remove
+                </Button>
+              </div>
+            );
+          })}
+        </CardContent>  
       </Card>
     </div>
   )
