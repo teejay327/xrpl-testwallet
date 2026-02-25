@@ -44,10 +44,27 @@ const WalletProvider = ({ children }) => {
   }
 
   return (
-    <div>
-      WalletContext
-    </div>
+    <WalletContext.Provider
+      value={{
+        accounts,
+        activeAccount,
+        activeId,
+        addAccount,
+        removeAccount,
+        selectAccount
+      }}
+    >
+      { children }
+    </WalletContext.Provider>
   )
 };
 
-export default WalletProvider;
+const useWallet = () => {
+  const context = useContext(WalletContext);
+  if (!context) {
+    throw new Error("useWallet must be used within a WalletProvider");
+  }
+  return context;
+}
+
+export { WalletProvider, useWallet };

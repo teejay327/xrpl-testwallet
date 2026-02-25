@@ -25,7 +25,7 @@ const WalletProvider = ({ children }) => {
 
   // Persist
   useEffect(() => {
-    localStorage.setItem(LS_ACCOUNTS, JSON.strongify(accounts));
+    localStorage.setItem(LS_ACCOUNTS, JSON.stringify(accounts));
   }, [accounts]);
 
   useEffect(() => {
