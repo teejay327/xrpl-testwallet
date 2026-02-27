@@ -1,6 +1,30 @@
+import { useEffect, useState } from "react";
 import Card, { CardHeader, CardTitle, CardContent, CardFooter } from "../components/ui/Card.jsx";
+import Button from "../components/ui/Button.jsx";
+import { getBalance } from "../xrpl/client.js";
+import { useWallet } from "../context/WalletContext.jsx";
+
+const short = s => (s ? `${s.slice(0, 6)}...${s.slice(-6)}` : "");
 
 const Dashboard = () => {
+  const { activeAccount } = useWallet();
+
+  const [balance,setBalance] = useState(null);
+  const [loading,setLoading] = useState(false);
+  const [err,setErr] = useState("");
+
+  const refresh = async = () => {
+    if (!activeAccount?.address) return;
+      try {
+        setErr("");
+        setLoading(true);
+      } catch (e) {
+
+      } finally {
+
+      }
+  }
+
   return (
     <div className="grid gap-6">
       <Card>
