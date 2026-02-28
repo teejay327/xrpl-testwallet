@@ -18,10 +18,13 @@ const Dashboard = () => {
       try {
         setErr("");
         setLoading(true);
+        const b = await getBalance(activeAccount, address);
+        setBalance(b);
       } catch (e) {
-
+        setErr(e?.message ?? String(e));
+        setBalance(null);
       } finally {
-
+        setLoading(false);
       }
   }
 
