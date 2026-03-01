@@ -28,6 +28,12 @@ const Dashboard = () => {
       }
   }
 
+    useEffect(() => {
+      // refresh balance for new active account
+      refresh();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeAccount?.address]);
+
   return (
     <div className="grid gap-6">
       <Card>
