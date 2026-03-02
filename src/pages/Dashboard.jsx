@@ -40,8 +40,14 @@ const Dashboard = () => {
         <CardHeader>
           <CardTitle>Dashboard</CardTitle>
         </CardHeader>
-        <CardContent className="text-slate-300">
-          Wallet overview
+
+        <CardContent className="grid gap-3">
+          {!activeAccount && (
+            <div>
+              No active account selected. Go to <span className="text-emerald-400">Accounts</span> and choose one
+            </div>
+          )}
+          
         </CardContent>
         <CardFooter/>
       </Card>
