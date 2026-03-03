@@ -48,6 +48,11 @@ const Dashboard = () => {
             </div>
           )}
           
+          {!activeAccount && (
+            <>
+            
+            </>
+          )}
         </CardContent>
         <CardFooter/>
       </Card>
