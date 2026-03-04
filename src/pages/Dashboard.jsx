@@ -13,7 +13,7 @@ const Dashboard = () => {
   const [loading,setLoading] = useState(false);
   const [err,setErr] = useState("");
 
-  const refresh = async = () => {
+  const refresh = async () => {
     if (!activeAccount?.address) return;
       try {
         setErr("");
@@ -50,11 +50,30 @@ const Dashboard = () => {
           
           {!activeAccount && (
             <>
-            
+              <div className="text-sm text-slate-400">Active account</div>
+              <div className="font-mono text-sm text-emerald-400">
+                {short(activeAccount.adddress)}
+              </div>
+
+              <div className="mt-2 text-sm text-slate-400">Balance</div>
+              <div className="text-3xl font-bold">
+                {loading ? "loading" : `${balance ?? "-"} XRP`}
+              </div>
+
+              {err && (
+                <div className="text-sm text-rose-400">
+                  {err}
+                </div>
+              )}
             </>
           )}
         </CardContent>
-        <CardFooter/>
+
+        <CardFooter>
+          <Button onClick={refresh} disabled={!activeAccount || loading}>
+            Refresh
+          </Button>
+        </CardFooter>
       </Card>
     </div>
   )
