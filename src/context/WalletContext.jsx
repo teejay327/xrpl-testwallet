@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 const WalletContext = createContext(null);
 
 const LS_ACCOUNTS = "xrpl_accounts_v1";
-const LS_ACTIVE = "xrpl_active-account_v1";
+const LS_ACTIVE = "xrpl_active_account_v1";
 
 const WalletProvider = ({ children }) => {
   const [accounts, setAccounts] = useState([]);

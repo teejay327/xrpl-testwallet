@@ -29,6 +29,7 @@ const Dashboard = () => {
   }
 
     useEffect(() => {
+      if (!activeAccount?.address) return;
       // refresh balance for new active account
       refresh();
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,11 +49,11 @@ const Dashboard = () => {
             </div>
           )}
           
-          {!activeAccount && (
+          {activeAccount && (
             <>
               <div className="text-sm text-slate-400">Active account</div>
               <div className="font-mono text-sm text-emerald-400">
-                {short(activeAccount.adddress)}
+                {short(activeAccount.address)}
               </div>
 
               <div className="mt-2 text-sm text-slate-400">Balance</div>
