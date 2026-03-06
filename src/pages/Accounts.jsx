@@ -1,9 +1,9 @@
-import Card, { CardHeader, CardTitle, CardContent } from "../components/ui/Card.jsx";
+import { useMemo, useState } from "react";
+import { useWallet } from "../context/WalletContext.jsx";
+import Card, { CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from "../components/ui/Card.jsx";
 import Button from "../components/ui/Button.jsx";
 import Input from "../components/ui/Input.jsx";
 import Label from "../components/ui/Label.jsx";
-import { useState } from "react";
-import { useWallet } from "../context/WalletContext.jsx";
 
 const short = (s) => (s ? `${s.slice(0,6)}...${s.slice(-6)}` : "");
 
@@ -11,15 +11,38 @@ const Accounts = () => {
   const {accounts, activeId, selectAccount, addAccount, removeAccount} = useWallet();
   const [label, setLabel] = useState("");
   const [address, setAddress] = useState("");
+  const [error, setError] = useState("");
+
+  const trimmedAddress = useMemo(() => address.trim(), [address]);
+  const canAdd = useMemo(() => trimmedAddress.length > 0, [trimmedAddress]);
+
+  const onClear = () => {
+    setLabel("");
+    setAddress("");
+    setError("");
+  }
+
   const onAdd = () => {
-    if (!address.trim()) return;
+    const addr = trimmedAddress;
+    const name = label.trim();
+
+    if (!address) return;
+    if (!addr.startsWith("r") || addr.length < 25) {
+      setError("Invalid XRPL address - it must be < 25 digits and start with r");
+    }
+    setError("");
+
     addAccount({
       id: crypto.randomUUID(),
       label: label.trim() || "Account",
-      address: address.trim()
+      address: addr
     });
-    setLabel("");
-    setAddress("");
+
+    onClear();
+  };
+
+  const onKeyDown = (e) => {
+    if (e.key === "Enter") onAdd();
   };
 
   return (
@@ -27,25 +50,38 @@ const Accounts = () => {
       <Card>
         <CardHeader>
           <CardTitle>Accounts</CardTitle>
+          <CardDescription>Add a Testnet address and select it as active</CardDescription>
         </CardHeader>
 
         <CardContent className="grid gap-4">
           <div className="grid gap-1">
             <Label>Label</Label>
-            <Input value={label} onChange={(e) => setLabel(e.target.value)} placeholder="Firstname FamilyName"/>
+            <Input 
+              value={label} 
+              onChange={(e) => setLabel(e.target.value)} 
+              placeholder="Firstname FamilyName"
+              onKeyDown={onKeyDown}
+            />
           </div>
+
           <div className="grid gap-1">
             <Label>XRPL Address</Label>
-            <Input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="r1234567"/>
+            <Input 
+              value={address} 
+              onChange={(e) => setAddress(e.target.value)} 
+              placeholder="r1234567..."
+              onKeyDown={onKeyDown}
+            />
+            {error && <div className="text-sm text-rose-400">{error}</div>}
           </div>
         </CardContent>
 
         <CardFooter>
-          <Button onClick={onAdd}>Add account</Button>
-          <Button variant="secondary" onClick={() => { 
-            setLabel("");
-            setAddress("");
-            }}>
+          <Button onClick={onAdd} disabled={!canAdd}>
+            Add account
+          </Button>
+          <Button variant="secondary" onClick={onClear}>
+            Clear
           </Button>
         </CardFooter>
       </Card>
@@ -57,11 +93,14 @@ const Accounts = () => {
 
         <CardContent className="grid gap-2">
           { accounts.length === 0 && (
-            <div className="text-sm text-slate-300">No accounts yet - please add one above</div>
+            <div className="text-sm text-slate-300">
+              No accounts yet - please add one above
+            </div>
           )}
 
           {accounts.map((a) => {
             const active = a.id === activeId;
+
             return(
               <div
                 key={a.id}
@@ -71,12 +110,14 @@ const Accounts = () => {
                 }
               >
                 <button
+                  type="button"
                   className="text-left"
                   onClick={() => selectAccount(a.id)}
                   title="Select this account"
                 >
                   <div className="font-semibold text-slate-100">
-                    {a.label} {active && <span className="ml-2 text-emerald-400 text-xs">(active)</span>}  
+                    {a.label} 
+                    {active && <span className="ml-2 text-emerald-400 text-xs">(active)</span>}  
                   </div>
                   <div className="text-xs text-slate-300">{short(a.address)}</div>
                 </button>

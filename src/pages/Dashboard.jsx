@@ -18,7 +18,7 @@ const Dashboard = () => {
       try {
         setErr("");
         setLoading(true);
-        const b = await getBalance(activeAccount, address);
+        const b = await getBalance(activeAccount.address);
         setBalance(b);
       } catch (e) {
         setErr(e?.message ?? String(e));
@@ -43,7 +43,7 @@ const Dashboard = () => {
         </CardHeader>
 
         <CardContent className="grid gap-3">
-          {!activeAccount && (
+          {activeAccount && (
             <div>
               No active account selected. Go to <span className="text-emerald-400">Accounts</span> and choose one
             </div>
