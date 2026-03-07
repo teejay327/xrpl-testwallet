@@ -123,7 +123,7 @@ const Accounts = () => {
                 </button>
 
                 <Button variant="ghost" size="sm" onClick={() => removeAccount(a.id)}>
-                  Remove
+                  Remov
                 </Button>
               </div>
             );
