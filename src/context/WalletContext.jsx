@@ -45,8 +45,13 @@ const WalletProvider = ({ children }) => {
   };
 
   const removeAccount = (id) => {
-    setAccounts((prev) => prev.filter((a) => a.id !== id));
-    setActiveId((prev) => (prev === id ? null : prev));
+    setAccounts((prev) => {
+      const next = prev.filter((a) => a.id !== id);
+      if (id === activeId) {
+        setActiveId(next[0]?.id || null);
+      }
+      return next;
+    });
   };
 
 

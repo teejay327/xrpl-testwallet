@@ -4,6 +4,7 @@ import Card, { CardHeader, CardTitle, CardContent, CardFooter, CardDescription }
 import Button from "../components/ui/Button.jsx";
 import Input from "../components/ui/Input.jsx";
 import Label from "../components/ui/Label.jsx";
+import { isValidClassicAddress  } from "xrpl";
 
 const short = (s) => (s ? `${s.slice(0,6)}...${s.slice(-6)}` : "");
 
@@ -26,11 +27,10 @@ const Accounts = () => {
     const addr = trimmedAddress;
     const name = label.trim();
 
-    if (!address) return;
-    if (!addr.startsWith("r") || addr.length < 25) {
-      setError("Invalid XRPL address - it must be < 25 digits and start with r");
+    if (!isValidClassicAddress(addr)) {
+      setError("Invalid XRPL address - it must be at least 25 characters starting with r");
+      return;
     }
-    setError("");
 
     addAccount({
       id: crypto.randomUUID(),

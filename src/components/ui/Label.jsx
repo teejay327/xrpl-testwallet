@@ -1,7 +1,14 @@
-const Label = () => {
+import cn from "./cn.js";
+
+const Label = ({ className, children, ...props }) => {
 
   return (
-    Label
+    <label 
+      className={cn("text-sm font-semibold text-slate-200", className)}
+      {...props}
+    >
+      {children}
+    </label>
   )
 }
 
