@@ -55,7 +55,11 @@ const WalletProvider = ({ children }) => {
   };
 
 
-  const selectAccount = (id) => setActiveId(id);
+  const selectAccount = (id) => {
+    console.log("Selecting Account:", id);
+    setActiveId(id);
+  }
+    
 
   return (
     <WalletContext.Provider
