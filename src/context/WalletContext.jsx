@@ -9,7 +9,6 @@ const WalletProvider = ({ children }) => {
   const [accounts, setAccounts] = useState([]);
   const [activeId, setActiveId ] = useState(null);
 
-
   // Load from localStorage
   useEffect(() => {
     try {
@@ -32,10 +31,10 @@ const WalletProvider = ({ children }) => {
     if (activeId) localStorage.setItem(LS_ACTIVE, activeId);
   }, [activeId]);
 
-  const activeAccount = useMemo(() => accounts.find((a) => a.id === activeId) 
-    || null, [accounts, activeId]);
-  
-  
+  const activeAccount = useMemo(() => {
+    return accounts.find((a) => a.id === activeId) || null;
+  }, [accounts, activeId]);
+    
   const addAccount = (account) => {
     setAccounts((prev) => {
       const next = [account, ...prev];
@@ -60,6 +59,9 @@ const WalletProvider = ({ children }) => {
     setActiveId(id);
   }
     
+  console.log("accounts:", accounts);
+  console.log("activeId:", activeId);
+  console.log("activeAccount:", activeAccount);
 
   return (
     <WalletContext.Provider
@@ -70,9 +72,11 @@ const WalletProvider = ({ children }) => {
   );
 };
 
-export const useWallet = () => {
+const useWallet = () => {
   const ctx = useContext(WalletContext);
   if (!ctx) throw new Error("useWallet must be used within <WalletProvider>");
   return ctx;
 }
+
+export { useWallet };
 export default WalletProvider;
