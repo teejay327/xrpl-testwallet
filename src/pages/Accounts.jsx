@@ -4,7 +4,7 @@ import Card, { CardHeader, CardTitle, CardContent, CardFooter, CardDescription }
 import Button from "../components/ui/Button.jsx";
 import Input from "../components/ui/Input.jsx";
 import Label from "../components/ui/Label.jsx";
-import { isValidClassicAddress  } from "xrpl";
+import { isValidClassicAddress, Wallet  } from "xrpl";
 
 const short = (s) => (s ? `${s.slice(0,6)}...${s.slice(-6)}` : "");
 
@@ -40,6 +40,19 @@ const Accounts = () => {
 
     onClear();
   };
+
+  const onGenerate = () => {
+    const wallet = Wallet.generate();
+
+    addAccount({
+      id: crypto.randomUUID(),
+      label: label.trim() || `Testnet Wallet ${accounts.length + 1}`,
+      address: wallet.address,
+      seed: wallet.seed
+    });
+
+    onClear();
+  }
 
   const onKeyDown = (e) => {
     if (e.key === "Enter") onAdd();
@@ -80,7 +93,12 @@ const Accounts = () => {
           <Button onClick={onAdd} disabled={!canAdd}>
             Add account
           </Button>
-          <Button variant="secondary" onClick={onClear}>
+
+          <Button variant="secondary" onClick={onGenerate}>
+            Generate Testnet Wallet
+          </Button>
+
+          <Button variant="ghost" onClick={onClear}>
             Clear
           </Button>
         </CardFooter>
@@ -120,6 +138,12 @@ const Accounts = () => {
                     {active && <span className="ml-2 text-emerald-400 text-xs">(active)</span>}  
                   </div>
                   <div className="text-xs text-slate-300">{short(a.address)}</div>
+
+                  {a.seed && (
+                    <div className="mt-1 text-[11px] text-amber-400">
+                      Generated in app
+                    </div>
+                  )}
                 </button>
 
                 <Button variant="ghost" size="sm" onClick={() => removeAccount(a.id)}>
