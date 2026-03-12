@@ -112,7 +112,7 @@ const Accounts = () => {
         <CardContent className="grid gap-2">
           { accounts.length === 0 && (
             <div className="text-sm text-slate-300">
-              No accounts yet - please add one above
+              No accounts yet - please add one from above
             </div>
           )}
 
