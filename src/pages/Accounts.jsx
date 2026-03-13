@@ -146,9 +146,22 @@ const Accounts = () => {
                   )}
                 </button>
 
-                <Button variant="ghost" size="sm" onClick={() => removeAccount(a.id)}>
-                  Remove
-                </Button>
+                <div className="flex flex-items-center gap-3">
+                  <button
+                    type="button"
+                    className="text-emerald-400 hover:text-emerald-200 text-xs"
+                    onClick={() => navigator.clipboard.writeText(a.address)}
+                  >
+                    Copy address
+                  </button>
+
+                  <Button variant="ghost" size="sm" onClick={() => removeAccount(a.id)}>
+                    Remove
+                  </Button>
+                </div>
+
+
+
               </div>
             );
           })}
