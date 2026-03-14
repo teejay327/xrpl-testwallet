@@ -32,7 +32,13 @@ const Dashboard = () => {
       if (!activeAccount?.address) return;
       // refresh balance for new active account
       refresh();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+
+      const timer = setInterval(() => {
+        refresh();
+      },15000);
+      return () => clearInterval(timer);
+
+      // eslint-disable-next-line react-hooks/exhaustive-dep
     }, [activeAccount?.address]);
 
   return (
@@ -59,6 +65,9 @@ const Dashboard = () => {
               <div className="mt-2 text-sm text-slate-400">Balance</div>
               <div className="text-3xl font-bold">
                 {loading ? "loading" : `${balance ?? "-"} XRP`}
+              </div>
+              <div className="text-xs text-slate-400">
+                Auto-refresh every 15 secs
               </div>
 
               {err && (
