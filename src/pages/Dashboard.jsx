@@ -13,6 +13,11 @@ const Dashboard = () => {
   const [loading,setLoading] = useState(false);
   const [err,setErr] = useState("");
 
+  const [destination, setDestination ] = useState("");
+  const [amount, setAmount] = useState("");
+  const [sending, setSending] = useState("");
+  // Code here ///////////////////////////////////////////////////
+
   const refresh = async () => {
     if (!activeAccount?.address) return;
       try {
