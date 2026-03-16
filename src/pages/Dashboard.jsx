@@ -3,6 +3,7 @@ import Card, { CardHeader, CardTitle, CardContent, CardFooter } from "../compone
 import Button from "../components/ui/Button.jsx";
 import { getBalance } from "../xrpl/client.js";
 import { useWallet } from "../context/WalletContext.jsx";
+import sendXrp from "../xrpl/sendXrp.js";
 
 const short = s => (s ? `${s.slice(0, 6)}...${s.slice(-6)}` : "");
 
@@ -16,7 +17,6 @@ const Dashboard = () => {
   const [destination, setDestination ] = useState("");
   const [amount, setAmount] = useState("");
   const [sending, setSending] = useState("");
-  // Code here ///////////////////////////////////////////////////
 
   const refresh = async () => {
     if (!activeAccount?.address) return;
@@ -31,6 +31,30 @@ const Dashboard = () => {
       } finally {
         setLoading(false);
       }
+  }
+
+  const handleSend = async() => {
+    if (!activeAccount?.seed) return;
+
+    try {
+      setSending(true);
+
+      await sendXrp({
+        seed: activeAccount.seed,
+        destination,
+        amount
+      });
+
+      refresh();
+
+      setDestination("");
+      setAmount("");
+
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSending(false);
+    }
   }
 
     useEffect(() => {
