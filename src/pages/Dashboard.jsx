@@ -99,6 +99,18 @@ const Dashboard = () => {
                 Auto-refresh every 15 secs
               </div>
 
+              <div className="mt-6 grid gap-3">
+                <div className="text-sm text-slate-400">Send XRP</div>
+
+                <Input
+                  placeholder="Destination address"
+                  value={destination}
+                  onChange={(e) => setDestination(e.target.value)}
+                />
+
+                {/* UP TO HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/}
+              </div>
+
               {err && (
                 <div className="text-sm text-rose-400">
                   {err}
