@@ -108,7 +108,18 @@ const Dashboard = () => {
                   onChange={(e) => setDestination(e.target.value)}
                 />
 
-                {/* UP TO HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/}
+                <Input 
+                  placeholder="Amount"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                />
+
+                <Button
+                  onClick={handleSend}
+                  disabled={sending}
+                >
+                  {sending ? "Sending..." : "Send XRP"}
+                </Button>
               </div>
 
               {err && (
