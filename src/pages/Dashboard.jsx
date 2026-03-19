@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import Card, { CardHeader, CardTitle, CardContent, CardFooter } from "../components/ui/Card.jsx";
 import Button from "../components/ui/Button.jsx";
+import Label from "../components/ui/Label.jsx";
+import Input from "../components/ui/Input.jsx";
 import { getBalance } from "../xrpl/client.js";
 import { useWallet } from "../context/WalletContext.jsx";
 import sendXrp from "../xrpl/sendXrp.js";
@@ -34,24 +36,30 @@ const Dashboard = () => {
   }
 
   const handleSend = async() => {
-    if (!activeAccount?.seed) return;
+    console.log("Sending XRP...");
+    if (!activeAccount?.seed) {
+      console.error("No seed on active account");
+      return;
+    }
 
     try {
       setSending(true);
 
-      await sendXrp({
+      const result = await sendXrp({
         seed: activeAccount.seed,
         destination,
         amount
       });
 
-      refresh();
+      console.log("Dashboard: send complete", result);
+      
+      await refresh();
 
       setDestination("");
       setAmount("");
 
     } catch (err) {
-      console.error(err);
+      console.error("SEND ERROR:", err);
     } finally {
       setSending(false);
     }
@@ -78,7 +86,7 @@ const Dashboard = () => {
         </CardHeader>
 
         <CardContent className="grid gap-3">
-          {activeAccount && (
+          {!activeAccount && (
             <div>
               No active account selected. Go to <span className="text-emerald-400">Accounts</span> and choose one
             </div>
@@ -99,26 +107,31 @@ const Dashboard = () => {
                 Auto-refresh every 15 secs
               </div>
 
-              <div className="mt-6 grid gap-3">
-                <div className="text-sm text-slate-400">Send XRP</div>
+              <div className="mt-6 grid gap-4">
+                <div className="text-sm text-slate-400">
+                  Send XRP
+                </div>
 
-                <Input
-                  placeholder="Destination address"
-                  value={destination}
-                  onChange={(e) => setDestination(e.target.value)}
-                />
+                <div className="grid gap-1">
+                  <Label>Destination Address</Label>
+                  <Input
+                    placeholder="r1234567..."
+                    value={destination}
+                    onChange={(e) => setDestination(e.target.value)}
+                  />
+                </div>
+        
+                <div className="grid gap-1">
+                  <Label>Amount in XRP</Label>
+                  <Input
+                    placeholder="1"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                  />
+                </div>
 
-                <Input 
-                  placeholder="Amount"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                />
-
-                <Button
-                  onClick={handleSend}
-                  disabled={sending}
-                >
-                  {sending ? "Sending..." : "Send XRP"}
+                <Button onClick={handleSend} disabled={sending}>
+                  {sending ? "Sending ..." : "Send XRP"}
                 </Button>
               </div>
 

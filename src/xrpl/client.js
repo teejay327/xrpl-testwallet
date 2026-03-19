@@ -8,6 +8,8 @@ const getClient = async () => {
   if (!client) {
     client = new Client(WS_URL);
     await client.connect();
+  } else if (!client.isConnected()) {
+    await client.connect();
   }
   return client;
 }
