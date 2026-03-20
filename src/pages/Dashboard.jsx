@@ -107,6 +107,18 @@ const Dashboard = () => {
                 Auto-refresh every 15 secs
               </div>
 
+              {!activeAccount?.seed && (
+                <div className="mt-2 text-xs text-amber-400">
+                  Watch-only account - sending is disabled
+                </div>
+              )}
+
+              {err && (
+                <div className="text-sm text-rose-400">
+                  {err}
+                </div>
+              )}
+
               <div className="mt-6 grid gap-4">
                 <div className="text-sm text-slate-400">
                   Send XRP
@@ -130,8 +142,12 @@ const Dashboard = () => {
                   />
                 </div>
 
-                <Button onClick={handleSend} disabled={sending}>
-                  {sending ? "Sending ..." : "Send XRP"}
+                <Button onClick={handleSend} disabled={sending || !activeAccount?.seed}>
+                  {!activeAccount?.seed 
+                    ? "Watch-only account" 
+                    : sending 
+                    ? "Sending ..." 
+                    : "Send XRP"}
                 </Button>
               </div>
 

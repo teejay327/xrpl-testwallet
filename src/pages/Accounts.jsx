@@ -133,10 +133,21 @@ const Accounts = () => {
                   onClick={() => selectAccount(a.id)}
                   title="Select this account"
                 >
-                  <div className="font-semibold text-slate-100">
+                  <div className="flex items-center  gap-2 font-semibold text-slate-100">
                     {a.label} 
-                    {active && <span className="ml-2 text-emerald-400 text-xs">(active)</span>}  
+                    {active && <span className="text-emerald-400 text-xs">(active)</span>}  
+
+                    {a.seed ? (
+                      <span className="text-emerald-400 text-[10px] border border-emerald-500/40 px-1 rounded">
+                        signing
+                      </span>
+                    ): (
+                      <span className="text-amber-400 text-[10px] border border-amber-500/40 px-1 rounded">
+                        watch
+                      </span>
+                    )}            
                   </div>
+
                   <div className="text-xs text-slate-300">{short(a.address)}</div>
 
                   {a.seed && (
