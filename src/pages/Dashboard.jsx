@@ -19,6 +19,8 @@ const Dashboard = () => {
   const [destination, setDestination ] = useState("");
   const [amount, setAmount] = useState("");
   const [sending, setSending] = useState("");
+  const [txMessage,setTxMessage] = useState("");
+  const [txHash,setTxHash] = useState("");
 
   const refresh = async () => {
     if (!activeAccount?.address) return;
@@ -44,15 +46,21 @@ const Dashboard = () => {
 
     try {
       setSending(true);
+      setErr("");
+      setTxMessage("");
+      setTxHash("");
 
       const result = await sendXrp({
         seed: activeAccount.seed,
         destination,
         amount
       });
-
-      console.log("Dashboard: send complete", result);
       
+      console.log("Dashboard: send complete", result);
+
+      setTxMessage(`Sent ${amount} XRP successfully`);
+      setTxHash(result?.hash || result?.tx_json?.hash || "");
+
       await refresh();
 
       setDestination("");
@@ -60,6 +68,9 @@ const Dashboard = () => {
 
     } catch (err) {
       console.error("SEND ERROR:", err);
+      setErr(err?.message || "Transaction failed");
+      setTxMessage("");
+      setTxHash("");
     } finally {
       setSending(false);
     }
@@ -149,6 +160,20 @@ const Dashboard = () => {
                     ? "Sending ..." 
                     : "Send XRP"}
                 </Button>
+
+                {txMessage && (
+                  <div className="mt-3 rounded=md border border-emerald-500/30 bg-emerald-500/10 p-3"> 
+                    <div className="text-sm font-semibold text-emerald-300">
+                      {txMessage}
+                    </div>
+
+                    {txHash && (
+                      <div className="mt-1 text-xs text-slate-300 break-all">
+                        Transaction hash: <span className="text-emerald-400">{txHash}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {err && (
