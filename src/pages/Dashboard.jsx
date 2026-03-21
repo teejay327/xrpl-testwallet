@@ -6,6 +6,7 @@ import Input from "../components/ui/Input.jsx";
 import { getBalance } from "../xrpl/client.js";
 import { useWallet } from "../context/WalletContext.jsx";
 import sendXrp from "../xrpl/sendXrp.js";
+import getTransactions from "../xrpl/history.js";
 
 const short = s => (s ? `${s.slice(0, 6)}...${s.slice(-6)}` : "");
 
@@ -21,6 +22,9 @@ const Dashboard = () => {
   const [sending, setSending] = useState("");
   const [txMessage,setTxMessage] = useState("");
   const [txHash,setTxHash] = useState("");
+
+  const [txs,setTxs] = useState([]);
+  const [loadingTx,setLoadingTx] = useState(false);
 
   const refresh = async () => {
     if (!activeAccount?.address) return;
@@ -80,6 +84,21 @@ const Dashboard = () => {
       if (!activeAccount?.address) return;
       // refresh balance for new active account
       refresh();
+
+      const loadTxs = async() => {
+        setLoadingTx(true);
+
+        try {
+          const data = await getTransactions(activeAccount.address);
+          setTxs(data);
+        } catch(err) {
+          console.error("TX LOAD ERROR:", err);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      loadTxs();
 
       const timer = setInterval(() => {
         refresh();
