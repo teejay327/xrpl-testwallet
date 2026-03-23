@@ -102,7 +102,7 @@ const Dashboard = () => {
 
       const timer = setInterval(() => {
         refresh();
-      },30000);
+      },15000);
       return () => clearInterval(timer);
 
       // eslint-disable-next-line react-hooks/exhaustive-dep
