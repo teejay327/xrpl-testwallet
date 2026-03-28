@@ -182,7 +182,7 @@ const Dashboard = () => {
                 </Button>
 
                 {txMessage && (
-                  <div className="mt-3 rounded=md border border-emerald-500/30 bg-emerald-500/10 p-3"> 
+                  <div className="mt-3 rounded-md border border-emerald-500/30 bg-emerald-500/10 p-3"> 
                     <div className="text-sm font-semibold text-emerald-300">
                       {txMessage}
                     </div>
@@ -196,7 +196,7 @@ const Dashboard = () => {
                 )}
               </div>
 
-              <div classname="mt-6">
+              <div className="mt-6">
                 <div className="mb-2 text-sm text-slate-400">
                   Recent transactions
                 </div>
@@ -212,11 +212,32 @@ const Dashboard = () => {
                 )}
 
                 <div className="space-y-2">
-                  
+                  {txs.map((tx, i) => {
+                    const transaction = tx.tx;
+                    const isIncoming = transaction.destination === activeAccount.address;
+
+                    const amount =
+                      typeof transaction.Amount === "string"
+                      ? Number(transaction.Amount) / 1_000_000
+                      : 0;
+
+                    return (
+                      <div key={i} className="rounded-md border border-slate-800 bg-slate-900/50 p-3 text-xs">
+                        <div className="flex justify-between">
+                          <span className={ isIncoming ? "text-emerald-400" : text-rose-400}>
+                            {isIncoming ? "Received" : "Sent"}
+                          </span>
+
+                          <span>{amount} XRP</span>
+                        </div>
+
+                        <div className="mt-1 break-all text-slate-400">
+                          {isIncoming ? transaction.Account : transaction.Destination}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-
-
-
               </div>
             </>
           )}
