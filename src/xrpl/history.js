@@ -8,10 +8,13 @@ const getTransactions = async(address) => {
    account: address,
    ledger_index_min: -1,
    ledger_index_max: -1,
-   limit: 10
+   limit: 10,
+   forward: false
   });
 
-  return response.result.transactions;
+  console.log("account_tx response", response);
+
+  return response.result.transactions || [];
 }
 
 export default getTransactions;
