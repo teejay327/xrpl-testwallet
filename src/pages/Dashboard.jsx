@@ -231,7 +231,7 @@ const Dashboard = () => {
                           <span>{amount} XRP</span>
                         </div>
 
-                        <div className="mt-1 break-all text-slate-400">
+                        <div className="mt-1 break-all text-slate-300">
                           {isIncoming ? transaction.Account : transaction.Destination}
                         </div>
                       </div>
