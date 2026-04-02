@@ -12,30 +12,35 @@ const Accounts = () => {
   const {accounts, activeId, selectAccount, addAccount, removeAccount} = useWallet();
   const [label, setLabel] = useState("");
   const [address, setAddress] = useState("");
+  const [seed,setSeed] = useState("");
   const [error, setError] = useState("");
 
   const trimmedAddress = useMemo(() => address.trim(), [address]);
+  const trimmedSeed = useMemo(() => address.trim(), [address]);
+  const trimmedLabel = useMemo(() => label.trim(), [label]);
+
   const canAdd = useMemo(() => trimmedAddress.length > 0, [trimmedAddress]);
+  const canImport = useMemo(() => trimmedSeed.length > 0, [trimmedSeed]);
 
   const onClear = () => {
     setLabel("");
     setAddress("");
+    setSeed("");
     setError("");
   }
 
   const onAdd = () => {
-    const addr = trimmedAddress;
-    const name = label.trim();
-
-    if (!isValidClassicAddress(addr)) {
+    if (!isValidClassicAddress(trimmedAddress)) {
       setError("Invalid XRPL address - it must be at least 25 characters starting with r");
       return;
     }
 
+    setError("");
+
     addAccount({
       id: crypto.randomUUID(),
-      label: label.trim() || "Account",
-      address: addr
+      label: trimmedLabel || "Watch Account",
+      address: trimmedAddress
     });
 
     onClear();
@@ -46,7 +51,7 @@ const Accounts = () => {
 
     addAccount({
       id: crypto.randomUUID(),
-      label: label.trim() || `Testnet Wallet ${accounts.length + 1}`,
+      label: trimmedLabel || `Testnet Wallet ${accounts.length + 1}`,
       address: wallet.address,
       seed: wallet.seed
     });
@@ -54,8 +59,33 @@ const Accounts = () => {
     onClear();
   }
 
+  const onImport = () => {
+    try {
+      const wallet = Wallet.fromSeed(trimmedSeed);
+
+      setError("");
+
+      addAccount({
+        id: crypto.randomUUID(),
+        label: trimmedLabel || `Imported Wallet ${accounts.length + 1}`,
+        address: wallet.address,
+        seed: trimmedSeed
+      });
+
+      onClear();
+    } catch(err) {
+      setError("Invalid seed - unable to import wallet.");
+    }
+  }
+
   const onKeyDown = (e) => {
-    if (e.key === "Enter") onAdd();
+    if (e.key === "Enter") {
+      if (trimmedSeed) {
+        onImport();
+      } else if (trimmedAddress) {
+        onAdd();
+      }
+    };
   };
 
   return (
@@ -78,24 +108,43 @@ const Accounts = () => {
           </div>
 
           <div className="grid gap-1">
-            <Label>XRPL Address</Label>
+            <Label>XRPL Address (watch-only)</Label>
             <Input 
               value={address} 
               onChange={(e) => setAddress(e.target.value)} 
               placeholder="r1234567..."
               onKeyDown={onKeyDown}
             />
-            {error && <div className="text-sm text-rose-400">{error}</div>}
           </div>
+
+          <div className="grid gap-1">
+            <Label>Seed (signing wallet import)</Label>
+            <Input
+              value={seed}
+              onChange={(e) => setSeed(e.target.value)}
+              placeholder="sEd..."
+              onKeyDown={onKeyDown}
+            />
+          </div>
+
+          {error && (
+            <div className="text-sm text-rose-400">
+              {error}
+            </div>
+          )}
         </CardContent>
 
-        <CardFooter>
+        <CardFooter className="flex flex-wrap gap-3">
           <Button onClick={onAdd} disabled={!canAdd}>
-            Add account
+            Add watch-only account
           </Button>
 
           <Button variant="secondary" onClick={onGenerate}>
             Generate Testnet Wallet
+          </Button>
+
+          <Button variant="secondary" onClick={onImport} disabled={!canImport}>
+            Import by Seed
           </Button>
 
           <Button variant="ghost" onClick={onClear}>
@@ -112,7 +161,7 @@ const Accounts = () => {
         <CardContent className="grid gap-2">
           { accounts.length === 0 && (
             <div className="text-sm text-slate-300">
-              No accounts yet - please add one from above
+              No accounts yet - please add one, generate one or import one by seed.
             </div>
           )}
 
@@ -133,8 +182,9 @@ const Accounts = () => {
                   onClick={() => selectAccount(a.id)}
                   title="Select this account"
                 >
-                  <div className="flex items-center  gap-2 font-semibold text-slate-100">
-                    {a.label} 
+                  <div className="flex items-center gap-2 font-semibold text-slate-100">
+                    <span>{a.label} </span>
+                    
                     {active && <span className="text-emerald-400 text-xs">(active)</span>}  
 
                     {a.seed ? (
