@@ -19,7 +19,7 @@ const Dashboard = () => {
 
   const [destination, setDestination ] = useState("");
   const [amount, setAmount] = useState("");
-  const [sending, setSending] = useState("");
+  const [sending, setSending] = useState(false);
   const [txMessage,setTxMessage] = useState("");
   const [txHash,setTxHash] = useState("");
 
@@ -54,16 +54,16 @@ const Dashboard = () => {
       setTxMessage("");
       setTxHash("");
 
-      const result = await sendXrp({
+      const hash = await sendXrp({
         seed: activeAccount.seed,
         destination,
         amount
       });
       
-      console.log("Dashboard: send complete", result);
+      console.log("Dashboard: send complete", hash);
 
       setTxMessage(`Sent ${amount} XRP successfully`);
-      setTxHash(result?.hash || result?.tx_json?.hash || "");
+      setTxHash(hash || "");
 
       await refresh();
 
@@ -189,7 +189,18 @@ const Dashboard = () => {
 
                     {txHash && (
                       <div className="mt-1 text-xs text-slate-300 break-all">
-                        Transaction hash: <span className="text-emerald-400">{txHash}</span>
+                        Transaction hash: {" "}<span className="text-emerald-400">{txHash}</span>
+
+                        <div className="mt-1">
+                          <a
+                            href={`https://testnet.xrpl.org/transactions/${txHash}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-emerald-400 underline hover:text-emerald-200"
+                          >
+                            View on Explorer
+                          </a>
+                        </div >
                       </div>
                     )}
                   </div>
@@ -214,7 +225,7 @@ const Dashboard = () => {
                 <div className="space-y-2">
                   {txs.map((tx, i) => {
                     const transaction = tx.tx;
-                    const isIncoming = transaction.destination === activeAccount.address;
+                    const isIncoming = transaction.Destination === activeAccount.address;
 
                     const amount =
                       typeof transaction.Amount === "string"
@@ -224,7 +235,7 @@ const Dashboard = () => {
                     return (
                       <div key={i} className="rounded-md border border-slate-800 bg-slate-900/50 p-3 text-xs">
                         <div className="flex justify-between">
-                          <span className={ isIncoming ? "text-emerald-400" : text-rose-400}>
+                          <span className={ isIncoming ? "text-emerald-400" : "text-rose-400"}>
                             {isIncoming ? "Received" : "Sent"}
                           </span>
 

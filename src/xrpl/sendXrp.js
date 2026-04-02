@@ -19,7 +19,11 @@ const sendXrp = async ({ seed, destination, amount }) => {
   const result = await client.submitAndWait(signed.tx_blob);
   console.log("sendXrp: result =", result);
 
-  return result;
+  if (!result?.result?.hash) {
+    throw new Error("Transaction failed - no hash returned");
+  }
+  
+  return result.result.hash;
 
 };
 
