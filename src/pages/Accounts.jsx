@@ -62,18 +62,22 @@ const Accounts = () => {
   const onImport = () => {
     try {
       const wallet = Wallet.fromSeed(trimmedSeed);
+      console.log("Imported Wallet:", wallet.address);
 
-      setError("");
-
-      addAccount({
+      const accountToAdd = {
         id: crypto.randomUUID(),
         label: trimmedLabel || `Imported Wallet ${accounts.length + 1}`,
         address: wallet.address,
         seed: trimmedSeed
-      });
+      }
 
+      console.log("About ot add account", accountToAdd);
+
+      setError("");
+      addAccount(accountToAdd);
       onClear();
     } catch(err) {
+      console.error("IMPORT ERROR", err);
       setError("Invalid seed - unable to import wallet.");
     }
   }
@@ -136,7 +140,7 @@ const Accounts = () => {
 
         <CardFooter className="flex flex-wrap gap-3">
           <Button onClick={onAdd} disabled={!canAdd}>
-            Add watch-only account
+            Add watch-only account - can receive XRP but not send.
           </Button>
 
           <Button variant="secondary" onClick={onGenerate}>
