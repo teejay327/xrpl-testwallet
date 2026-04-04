@@ -38,7 +38,15 @@ const WalletProvider = ({ children }) => {
   const addAccount = (account) => {
     console.log("addAccount called with:", account);
     
-    setAccounts((prev) => [account, ...prev]);
+    setAccounts((prev) => {
+      const next = [account, ...prev];
+      console.log("next account:", next);
+      return next;
+    });
+      
+
+
+
     setActiveId(account.id);
   };
 

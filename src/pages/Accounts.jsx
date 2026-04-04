@@ -60,6 +60,8 @@ const Accounts = () => {
   }
 
   const onImport = () => {
+    console.log("onImport fired");
+    console.log("trimmedSeed:", trimmedSeed);
     try {
       const wallet = Wallet.fromSeed(trimmedSeed);
       console.log("Imported Wallet:", wallet.address);
@@ -71,7 +73,7 @@ const Accounts = () => {
         seed: trimmedSeed
       }
 
-      console.log("About ot add account", accountToAdd);
+      console.log("About to add account", accountToAdd);
 
       setError("");
       addAccount(accountToAdd);
