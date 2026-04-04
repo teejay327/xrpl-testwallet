@@ -149,7 +149,7 @@ const Accounts = () => {
             Generate Testnet Wallet
           </Button>
 
-          <Button variant="secondary" onClick={onImport} disabled={!canImport}>
+          <Button variant="secondary" onClick={() => console.log("plain button fired")}>
             Import by Seed
           </Button>
 
