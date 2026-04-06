@@ -73,7 +73,7 @@ const Accounts = () => {
         seed: trimmedSeed
       }
 
-      console.log("About to add account", accountToAdd);
+      console.log("About to add an account", accountToAdd);
 
       setError("");
       addAccount(accountToAdd);
@@ -149,7 +149,7 @@ const Accounts = () => {
             Generate Testnet Wallet
           </Button>
 
-          <Button variant="secondary" onClick={() => console.log("plain button fired")}>
+          <Button variant="secondary" onClick={onImport} disabled={!canImport}>
             Import by Seed
           </Button>
 
