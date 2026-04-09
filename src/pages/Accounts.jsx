@@ -73,7 +73,7 @@ const Accounts = () => {
         seed: trimmedSeed
       }
 
-      console.log("About to add account", accountToAdd);
+      console.log("Adding account", accountToAdd);
 
       setError("");
       addAccount(accountToAdd);
