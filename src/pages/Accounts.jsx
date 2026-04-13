@@ -118,7 +118,7 @@ const Accounts = () => {
             <Input 
               value={address} 
               onChange={(e) => setAddress(e.target.value)} 
-              placeholder="r1234567..."
+              placeholder="r12345678..."
               onKeyDown={onKeyDown}
             />
           </div>
