@@ -15,12 +15,12 @@ const Accounts = () => {
   const [seed,setSeed] = useState("");
   const [error, setError] = useState("");
 
-  const trimmedAddress = useMemo(() => address.trim(), [address]);
-  const trimmedSeed = useMemo(() => address.trim(), [address]);
-  const trimmedLabel = useMemo(() => label.trim(), [label]);
+  const trimmedAddress = address.trim();
+  const trimmedSeed = seed.trim();
+  const trimmedLabel = label.trim();
 
-  const canAdd = useMemo(() => trimmedAddress.length > 0, [trimmedAddress]);
-  const canImport = useMemo(() => trimmedSeed.length > 0, [trimmedSeed]);
+  const canAdd = trimmedAddress.length > 0;
+  const canImport = trimmedSeed.length > 0;
 
   const onClear = () => {
     setLabel("");
