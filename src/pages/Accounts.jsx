@@ -14,6 +14,8 @@ const Accounts = () => {
   const [address, setAddress] = useState("");
   const [seed,setSeed] = useState("");
   const [error, setError] = useState("");
+  const [revealedId, setRevealedId] = useState(null);
+  const [copiedId, setCopiedId] = useState(null);
 
   const trimmedAddress = address.trim();
   const trimmedSeed = seed.trim();
@@ -93,6 +95,23 @@ const Accounts = () => {
       }
     };
   };
+
+  const toggleReveal = (id) => {
+    setRevealedId((prev) => (prev === id ? null : id));
+  };
+
+  const copySeed = async(seed, id) => {
+    try {
+      await navigator.clipboard.writeText(seed);
+      setCopiedId(id);
+
+      setTimeout(() => {
+        setCopiedId(null);
+      }, 2000);
+    } catch(err) {
+      console.error("Copy failed:", err);
+    }
+  }
 
   return (
     <div className="grid gap-6">
@@ -210,6 +229,13 @@ const Accounts = () => {
 
                   <div className="text-xs text-slate-300">{short(a.address)}</div>
 
+                  {a.seed && revealedId === a.id && (
+                    <div className="mt-2 rounded-md border border-amber-500/30 bg-amber-500/10 
+                      p-2 text-xs break-all text-amber-200">
+                        {a.seed}
+                    </div>
+                  )}
+
                   {a.seed && (
                     <div className="mt-1 text-[11px] text-amber-400">
                       Generated in app
@@ -217,7 +243,7 @@ const Accounts = () => {
                   )}
                 </button>
 
-                <div className="flex flex-items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                   <button
                     type="button"
                     className="text-emerald-400 hover:text-emerald-200 text-xs"
@@ -226,13 +252,34 @@ const Accounts = () => {
                     Copy address
                   </button>
 
-                  <Button variant="ghost" size="sm" onClick={() => removeAccount(a.id)}>
+                  {a.seed && (
+                    <>
+                      <button
+                        type="button"
+                        className="text-xs text-amber-400 hover:text-amber-200"
+                        onClick={() => toggleReveal(a.id)}
+                      >
+                        {revealedId === a.id ? "Hide seed" : "Reveal seed"}
+                      </button>
+
+                      <button
+                        type="button"
+                        className="text-xs text-amber-400 hover:text-amber-200"
+                        onClick={() => copySeed(a.seed, a.id)}
+                      >
+                        {copiedId === a.id ? "Copied!" : "Copy"}
+                      </button>
+                    </>
+                  )}
+
+                  <Button 
+                    variant="ghost" 
+                    size="sm"  
+                    onClick={() => removeAccount(a.id)}
+                  >
                     Remove
                   </Button>
                 </div>
-
-
-
               </div>
             );
           })}
