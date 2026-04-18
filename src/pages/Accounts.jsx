@@ -267,7 +267,7 @@ const Accounts = () => {
                         className="text-xs text-amber-400 hover:text-amber-200"
                         onClick={() => copySeed(a.seed, a.id)}
                       >
-                        {copiedId === a.id ? "Copied!" : "Copy"}
+                        {copiedId === a.id ? "Copied!" : "Copy seed"}
                       </button>
                     </>
                   )}
