@@ -97,7 +97,18 @@ const Accounts = () => {
   };
 
   const toggleReveal = (id) => {
-    setRevealedId((prev) => (prev === id ? null : id));
+    setRevealedId((prev) => {
+      const next = prev === id ? null : id;
+    
+      if (next) {
+        setTimeout(() => {
+          setRevealedId((current) => {
+            current === id ? null : current
+          });
+        }, 10000);
+      }
+      return next;
+    });
   };
 
   const copySeed = async(seed, id) => {
