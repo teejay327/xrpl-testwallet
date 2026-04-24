@@ -16,6 +16,7 @@ const Accounts = () => {
   const [error, setError] = useState("");
   const [revealedId, setRevealedId] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
+  const [copiedAddressId, setCopiedAddressId] = useState(null);
 
   const trimmedAddress = address.trim();
   const trimmedSeed = seed.trim();
@@ -121,6 +122,19 @@ const Accounts = () => {
       }, 2000);
     } catch(err) {
       console.error("Copy failed:", err);
+    }
+  }
+
+  const copyAddress = async(address,id) => {
+    try {
+      await navigator.clipboard.writeText(address);
+      setCopiedAddressId(id);
+
+      setTimeout(() => {
+        setCopiedAddressId(null);
+      }, 2000);
+    } catch(err) {
+      console.error("Copy address failed:", err);
     }
   }
 
@@ -257,10 +271,10 @@ const Accounts = () => {
                 <div className="flex flex-wrap items-center gap-3">
                   <button
                     type="button"
-                    className="text-emerald-400 hover:text-emerald-200 text-xs"
-                    onClick={() => navigator.clipboard.writeText(a.address)}
+                    className="text-emerald-400 hover:text-emerald-200 text-xs transition"
+                    onClick={() => copyAddress(a.address, a.id)}
                   >
-                    Copy address
+                    {copiedAddressId === a.id ? "Copied!" : "Copy address"}
                   </button>
 
                   {a.seed && (
