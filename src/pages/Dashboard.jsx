@@ -26,6 +26,8 @@ const Dashboard = () => {
   const [txs,setTxs] = useState([]);
   const [loadingTx,setLoadingTx] = useState(false);
 
+  const [isFading, setIsFading] = useState(false);
+
   const refresh = async () => {
     if (!activeAccount?.address) return;
       try {
@@ -109,6 +111,27 @@ const Dashboard = () => {
       // eslint-disable-next-line react-hooks/exhaustive-dep
     }, [activeAccount?.address]);
 
+    useEffect(() => {
+      if (!txMessage) return;
+
+      setIsFading(false);
+
+      const fadeTimer = setTimeout(() => {
+        setIsFading(true);
+      },3000);
+
+      const clearTimer = setTimeout(() => {
+        setTxMessage("");
+        setTxHash("");
+        setIsFading(false);
+      },4000);
+
+      return() => {
+        clearTimeout(fadeTimer);
+        clearTimeout(clearTimer);
+      } 
+    }, [txMessage]);
+
   return (
     <div className="grid gap-6">
       <Card>
@@ -184,7 +207,8 @@ const Dashboard = () => {
                 </Button>
 
                 {txMessage && (
-                  <div className="mt-3 rounded-md border border-emerald-500/30 bg-emerald-500/10 p-3"> 
+                  <div className={`mt-3 rounded-md border border-emerald-500/30 bg-emerald-500/10 p-3
+                    transition-opacity duration-1000 ${isFading ? "opacity-0" : "opacity-100"}`} >
                     <div className="text-sm font-semibold text-emerald-300">
                       {txMessage}
                     </div>
@@ -224,24 +248,26 @@ const Dashboard = () => {
                   </div>
                 )}
 
+
                 <div className="space-y-2">
                   {txs.map((tx, i) => {
-                    const transaction = tx.tx;
+                    const transaction = tx.tx_json || tx.tx || tx;
+                    if (!transaction || transaction.TransactionType !== "Payment") return null;
+
                     const isIncoming = transaction.Destination === activeAccount.address;
 
-                    const amount =
-                      typeof transaction.Amount === "string"
+                    const txAmount = typeof transaction.Amount === "string"
                       ? Number(transaction.Amount) / 1_000_000
                       : 0;
 
                     return (
-                      <div key={i} className="rounded-md border border-slate-800 bg-slate-900/50 p-3 text-xs">
+                      <div key={transaction.hash || i} className="rounded-md border border-slate-800 bg-slate-900/50 p-3 text-xs">
                         <div className="flex justify-between">
                           <span className={ isIncoming ? "text-emerald-400" : "text-rose-400"}>
                             {isIncoming ? "Received" : "Sent"}
                           </span>
 
-                          <span>{amount} XRP</span>
+                          <span>{txAmount} XRP</span>
                         </div>
 
                         <div className="mt-1 break-all text-slate-300">
