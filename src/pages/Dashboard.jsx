@@ -173,7 +173,9 @@ const Dashboard = () => {
                   />
                 </div>
 
-                <Button onClick={handleSend} disabled={sending || !activeAccount?.seed}>
+                <Button onClick={handleSend} 
+                  disabled={sending || !activeAccount?.seed || !destination.trim() || !amount
+                }>
                   {!activeAccount?.seed 
                     ? "Watch-only account" 
                     : sending 
