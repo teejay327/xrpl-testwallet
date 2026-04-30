@@ -181,7 +181,7 @@ const Dashboard = () => {
                 <div className="grid gap-1">
                   <Label>Destination Address</Label>
                   <Input
-                    placeholder="r12345678s..."
+                    placeholder="r123456789..."
                     value={destination}
                     onChange={(e) => setDestination(e.target.value)}
                   />
