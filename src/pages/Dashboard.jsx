@@ -22,6 +22,7 @@ const Dashboard = () => {
   const [sending, setSending] = useState(false);
   const [txMessage,setTxMessage] = useState("");
   const [txHash,setTxHash] = useState("");
+  const [txType, setTxType] = useState("success");
 
   const [txs,setTxs] = useState([]);
   const [loadingTx,setLoadingTx] = useState(false);
@@ -50,6 +51,13 @@ const Dashboard = () => {
       return;
     }
 
+    if (destination.trim() === activeAccount.address) {
+      setTxType("error");
+      setTxMessage("Cannot send XRP to the active account");
+      setTxHash("");
+      return;
+    }
+
     try {
       setSending(true);
       setErr("");
@@ -64,6 +72,7 @@ const Dashboard = () => {
       
       console.log("Dashboard: send complete", hash);
 
+      setTxType("success");
       setTxMessage(`Sent ${amount} XRP successfully`);
       setTxHash(hash || "");
 
@@ -74,8 +83,8 @@ const Dashboard = () => {
 
     } catch (err) {
       console.error("SEND ERROR:", err);
-      setErr(err?.message || "Transaction failed");
-      setTxMessage("");
+      setTxType("error");
+      setTxMessage(err?.message || "Transaction failed");
       setTxHash("");
     } finally {
       setSending(false);
@@ -208,16 +217,19 @@ const Dashboard = () => {
 
                 {txMessage && (
                   <div className={`mt-3 rounded-md border border-emerald-500/30 bg-emerald-500/10 p-3
-                    transition-opacity duration-1000 ${isFading ? "opacity-0" : "opacity-100"}`} >
-                    <div className="text-sm font-semibold text-emerald-300">
-                      {txMessage}
-                    </div>
+                    transition-opacity duration-1000 ${isFading ? "opacity-0" : "opacity-100"
+                    } ${
+                      txType === "success" 
+                      ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                      : "border-rose-500/30 bg-rose-500/10 text-rose-300"
+                    }`} 
+                  >
 
                     {txHash && (
                       <div className="mt-1 text-xs text-slate-300 break-all">
                         Transaction hash: {" "}<span className="text-emerald-400">{txHash}</span>
-
-                        <div className="mt-1">
+                        {txType === "success" && txHash && (
+                          <div className="mt-1">
                           <a
                             href={`https://testnet.xrpl.org/transactions/${txHash}`}
                             target="_blank"
@@ -227,6 +239,7 @@ const Dashboard = () => {
                             View on Explorer
                           </a>
                         </div >
+                        )}
                       </div>
                     )}
                   </div>
