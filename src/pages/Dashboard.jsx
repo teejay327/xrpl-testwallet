@@ -29,6 +29,8 @@ const Dashboard = () => {
 
   const [isFading, setIsFading] = useState(false);
 
+  const isValidXrplAddress = addr => /^r[1-9A-HJ-NP-Za-km-z]{24,34}$/.test(addr.trim());
+
   const refresh = async () => {
     if (!activeAccount?.address) return;
       try {
@@ -54,6 +56,13 @@ const Dashboard = () => {
     if (destination.trim() === activeAccount.address) {
       setTxType("error");
       setTxMessage("Cannot send XRP to the active account");
+      setTxHash("");
+      return;
+    }
+
+    if (!isValidXrplAddress(destination)) {
+      setTxType("error");
+      setTxMessage("Invalid XRPL address");
       setTxHash("");
       return;
     }
@@ -229,7 +238,7 @@ const Dashboard = () => {
                     {txType === "success" && txHash && (
                       <div className="mt-1 text-xs text-slate-300 break-all">
                         Transaction hash: {" "}<span className="text-emerald-400">{txHash}</span>
-                        {txType === "success" && txHash && (
+                        
                           <div className="mt-1">
                           <a
                             href={`https://testnet.xrpl.org/transactions/${txHash}`}
@@ -240,7 +249,6 @@ const Dashboard = () => {
                             View on Explorer
                           </a>
                         </div >
-                        )}
                       </div>
                     )}
                   </div>
