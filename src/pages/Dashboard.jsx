@@ -224,8 +224,9 @@ const Dashboard = () => {
                       : "border-rose-500/30 bg-rose-500/10 text-rose-300"
                     }`} 
                   >
+                    <div>{txMessage}</div>
 
-                    {txHash && (
+                    {txType === "success" && txHash && (
                       <div className="mt-1 text-xs text-slate-300 break-all">
                         Transaction hash: {" "}<span className="text-emerald-400">{txHash}</span>
                         {txType === "success" && txHash && (
