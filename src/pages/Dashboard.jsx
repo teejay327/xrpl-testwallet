@@ -150,6 +150,14 @@ const Dashboard = () => {
       } 
     }, [txMessage]);
 
+    useEffect(() => {
+      if (txType === "error" && txMessage) {
+        setTxMessage("");
+        setTxHash("");
+        setTxType("success");
+      }
+    }, [destination, amount]);
+
   return (
     <div className="grid gap-6">
       <Card>
