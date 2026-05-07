@@ -142,7 +142,7 @@ const Dashboard = () => {
         setTxMessage("");
         setTxHash("");
         setIsFading(false);
-      },4000);
+      },3000);
 
       return() => {
         clearTimeout(fadeTimer);
