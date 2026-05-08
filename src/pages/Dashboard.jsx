@@ -7,6 +7,7 @@ import { getBalance } from "../xrpl/client.js";
 import { useWallet } from "../context/WalletContext.jsx";
 import sendXrp from "../xrpl/sendXrp.js";
 import getTransactions from "../xrpl/history.js";
+import { normaliseTransaction } from "../lib/normaliseTransaction.js";
 
 const short = s => (s ? `${s.slice(0, 6)}...${s.slice(-6)}` : "");
 
@@ -142,7 +143,7 @@ const Dashboard = () => {
         setTxMessage("");
         setTxHash("");
         setIsFading(false);
-      },3000);
+      },4000);
 
       return() => {
         clearTimeout(fadeTimer);
@@ -280,32 +281,16 @@ const Dashboard = () => {
 
 
                 <div className="space-y-2">
-                  {txs.map((tx, i) => {
-                    const transaction = tx.tx_json || tx.tx || tx;
-                    if (!transaction || transaction.TransactionType !== "Payment") return null;
-
-                    const isIncoming = transaction.Destination === activeAccount.address;
-
-                    const txAmount = typeof transaction.Amount === "string"
-                      ? Number(transaction.Amount) / 1_000_000
-                      : 0;
-
-                    return (
-                      <div key={transaction.hash || i} className="rounded-md border border-slate-800 bg-slate-900/50 p-3 text-xs">
-                        <div className="flex justify-between">
-                          <span className={ isIncoming ? "text-emerald-400" : "text-rose-400"}>
-                            {isIncoming ? "Received" : "Sent"}
-                          </span>
-
-                          <span>{txAmount} XRP</span>
-                        </div>
-
-                        <div className="mt-1 break-all text-slate-300">
-                          {isIncoming ? transaction.Account : transaction.Destination}
-                        </div>
+                  {txs.map((tx) => normaliseTransaction(tx, activeAccount.address)
+                    .filter(Boolean)
+                    .map((tx,i) => (
+                      <div
+                        key={tx.hash || i}
+                        
+                      >
                       </div>
-                    );
-                  })}
+                    )
+                  )}
                 </div>
               </div>
             </>
