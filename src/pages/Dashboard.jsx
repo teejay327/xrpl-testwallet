@@ -286,8 +286,23 @@ const Dashboard = () => {
                     .map((tx,i) => (
                       <div
                         key={tx.hash || i}
-                        
+                        className="rounded-md border border-slate-800 bg-slate-900/50 p-3 text-xs"
                       >
+                        <div className="flex justify-between">
+                          <span
+                            className={
+                              tx.incoming ? "text-emerald-400" : "text-rose-400"
+                            }
+                          >
+                            {tx.direction}
+                          </span>
+
+                          <span>{tx.amount} XRP</span>
+                        </div>
+
+                        <div className="mt-1 break-all text-slate-300">
+                            {tx.counterparty}
+                        </div>
                       </div>
                     )
                   )}
