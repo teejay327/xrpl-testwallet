@@ -137,7 +137,7 @@ const Dashboard = () => {
 
       const fadeTimer = setTimeout(() => {
         setIsFading(true);
-      },3000);
+      },4000);
 
       const clearTimer = setTimeout(() => {
         setTxMessage("");
@@ -283,7 +283,7 @@ const Dashboard = () => {
                 <div className="space-y-2">
                   {txs.map((tx) => normaliseTransaction(tx, activeAccount.address)
                     .filter(Boolean)
-                    .map((tx,i) => (
+                    .map((tx,i) => {
                       <div
                         key={tx.hash || i}
                         className="rounded-md border border-slate-800 bg-slate-900/50 p-3 text-xs"
@@ -296,15 +296,13 @@ const Dashboard = () => {
                           >
                             {tx.direction}
                           </span>
-
                           <span>{tx.amount} XRP</span>
                         </div>
-
                         <div className="mt-1 break-all text-slate-300">
                             {tx.counterparty}
-                        </div>
+                        </div>                        
                       </div>
-                    )
+                    })
                   )}
                 </div>
               </div>
