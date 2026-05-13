@@ -137,7 +137,7 @@ const Dashboard = () => {
 
       const fadeTimer = setTimeout(() => {
         setIsFading(true);
-      },4000);
+      },3000);
 
       const clearTimer = setTimeout(() => {
         setTxMessage("");
