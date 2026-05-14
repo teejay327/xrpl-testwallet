@@ -7,7 +7,7 @@ import { getBalance } from "../xrpl/client.js";
 import { useWallet } from "../context/WalletContext.jsx";
 import sendXrp from "../xrpl/sendXrp.js";
 import getTransactions from "../xrpl/history.js";
-import { normaliseTransaction } from "../lib/normaliseTransaction.js";
+import normaliseTransaction from "../lib/normaliseTransaction.js";
 
 const short = s => (s ? `${s.slice(0, 6)}...${s.slice(-6)}` : "");
 
@@ -278,7 +278,6 @@ const Dashboard = () => {
                     No transactions yet
                   </div>
                 )}
-
 
                 <div className="space-y-2">
                   {txs.map((tx) => normaliseTransaction(tx, activeAccount.address)
