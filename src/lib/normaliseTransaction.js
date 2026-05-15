@@ -1,7 +1,7 @@
 const normaliseTransaction = (rawTx, activeAddress) => {
   const tx = rawTx?.tx_json || rawTx?.tx || rawTx;
 
-  if (!tx || tx.TransactinType !== "Payment") return null;
+  if (!tx || tx.TransactionType !== "Payment") return null;
 
   const isXrpPayment = typeof tx.Amount === "string";
   if (!isXrpPayment) return null;
@@ -14,7 +14,8 @@ const normaliseTransaction = (rawTx, activeAddress) => {
     incoming,
     direction: incoming ? "Received" : "Sent",
     amount,
-    counterparty: incoming ? tx.Account : tx.Destination
+    counterparty: incoming ? tx.Account : tx.Destination,
+    timestamp: rawTx?.close_time_iso || null
   };
 };
 

@@ -299,6 +299,11 @@ const Dashboard = () => {
                         </div>
                         <div className="mt-1 break-all text-slate-300">
                             {tx.counterparty}
+                            {tx.timestamp && (
+                              <div className="mt-1 text-[10px] text-slate-500">
+                                {new Date(tx.timestamp).toLocaleString()}
+                              </div>
+                            )}
                         </div>                        
                       </div>
                     })

@@ -1,6 +1,6 @@
 import { Client } from "xrpl";
 
-const WS_URL = import.meta.env.VITE_XRPL_WS || "wss://testnet.xrpl-labs.com/";
+const WS_URL = import.meta.env.VITE_XRPL_WS || "wss://s.altnet.rippletest.net:51233";
 
 let client = null;
 
