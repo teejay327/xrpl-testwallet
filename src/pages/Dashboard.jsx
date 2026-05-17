@@ -280,7 +280,7 @@ const Dashboard = () => {
                 )}
 
                 <div className="space-y-2">
-                  {txs.map((tx) => normaliseTransaction(tx, activeAccount.address)
+                  {txs.map((tx) => normaliseTransaction(tx, activeAccount.address))
                     .filter(Boolean)
                     .map((tx,i) => {
                       <div
@@ -289,14 +289,13 @@ const Dashboard = () => {
                       >
                         <div className="flex justify-between">
                           <span
-                            className={
-                              tx.incoming ? "text-emerald-400" : "text-rose-400"
-                            }
-                          >
+                            className={tx.incoming ? "text-emerald-400" : "text-rose-400"}>
                             {tx.direction}
                           </span>
+
                           <span>{tx.amount} XRP</span>
                         </div>
+
                         <div className="mt-1 break-all text-slate-300">
                             {tx.counterparty}
                             {tx.timestamp && (
@@ -307,7 +306,7 @@ const Dashboard = () => {
                         </div>                        
                       </div>
                     })
-                  )}
+                  }
                 </div>
               </div>
             </>
