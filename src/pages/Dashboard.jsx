@@ -293,7 +293,7 @@ const Dashboard = () => {
                             {tx.direction}
                           </span>
 
-                          <span>{tx.amount} XRP</span>
+                          <span>{tx.amount}  XRP</span>
                         </div>
 
                         <div className="mt-1 break-all text-slate-300">
