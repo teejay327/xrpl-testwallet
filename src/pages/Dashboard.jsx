@@ -111,6 +111,13 @@ const Dashboard = () => {
 
         try {
           const data = await getTransactions(activeAccount.address);
+
+          console.log("Raw History", data);
+          console.log("Normalised history:",
+            data.map((tx) => normaliseTransaction(tx, activeAccount.address))
+          );
+
+
           console.log("Fetched TXS:", data);
           setTxs(data);
         } catch(err) {
