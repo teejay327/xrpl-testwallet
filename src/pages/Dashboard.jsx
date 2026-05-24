@@ -89,6 +89,9 @@ const Dashboard = () => {
 
       await refresh();
 
+      const data = await getTransactions(activeAccount.address);
+      setTxs(data);
+
       setDestination("");
       setAmount("");
 
@@ -171,7 +174,8 @@ const Dashboard = () => {
     .map((tx) => {
       return normaliseTransaction(tx, activeAccount?.address)
     })
-    .filter(Boolean);
+    .filter(Boolean)
+    .sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
 
   return (
     <div className="grid gap-6">
@@ -303,7 +307,7 @@ const Dashboard = () => {
                         <div className="flex justify-between">
                           <span
                             className={
-                              tx.incoming ? "text-emerald-400" : "text-rose-400"
+                              tx.incoming ? "text-emerald-400" : "text-sky-400"
                             }
                           >
                             {tx.direction}
