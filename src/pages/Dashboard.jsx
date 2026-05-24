@@ -8,6 +8,7 @@ import { useWallet } from "../context/WalletContext.jsx";
 import sendXrp from "../xrpl/sendXrp.js";
 import getTransactions from "../xrpl/history.js";
 import normaliseTransaction from "../lib/normaliseTransaction.js";
+import timeAgo from "../lib/timeAgo.js";
 
 const short = s => (s ? `${s.slice(0, 6)}...${s.slice(-6)}` : "");
 
@@ -101,70 +102,76 @@ const Dashboard = () => {
     }
   }
 
-    useEffect(() => {
-      if (!activeAccount?.address) return;
-      // refresh balance for new active account
-      refresh();
+  useEffect(() => {
+    if (!activeAccount?.address) return;
+    // refresh balance for new active account
+    refresh();
 
-      const loadTxs = async() => {
-        setLoadingTx(true);
+    const loadTxs = async() => {
+      setLoadingTx(true);
 
-        try {
-          const data = await getTransactions(activeAccount.address);
+      try {
+        const data = await getTransactions(activeAccount.address);
 
-          console.log("Raw History", data);
-          console.log("Normalised history:",
-            data.map((tx) => normaliseTransaction(tx, activeAccount.address))
-          );
+        console.log("Raw History", data);
+        console.log("Normalised history:",
+          data.map((tx) => normaliseTransaction(tx, activeAccount.address))
+        );
 
 
-          console.log("Fetched TXS:", data);
-          setTxs(data);
-        } catch(err) {
-          console.error("TX LOAD ERROR:", err);
-        } finally {
-          setLoadingTx(false);
-        }
-      };
-
-      loadTxs();
-
-      const timer = setInterval(() => {
-        refresh();
-      },30000);
-      return () => clearInterval(timer);
-
-      // eslint-disable-next-line react-hooks/exhaustive-dep
-    }, [activeAccount?.address]);
-
-    useEffect(() => {
-      if (!txMessage) return;
-
-      setIsFading(false);
-
-      const fadeTimer = setTimeout(() => {
-        setIsFading(true);
-      },4000);
-
-      const clearTimer = setTimeout(() => {
-        setTxMessage("");
-        setTxHash("");
-        setIsFading(false);
-      },4000);
-
-      return() => {
-        clearTimeout(fadeTimer);
-        clearTimeout(clearTimer);
-      } 
-    }, [txMessage]);
-
-    useEffect(() => {
-      if (txType === "error" && txMessage) {
-        setTxMessage("");
-        setTxHash("");
-        setTxType("success");
+        console.log("Fetched TXS:", data);
+        setTxs(data);
+      } catch(err) {
+        console.error("TX LOAD ERROR:", err);
+      } finally {
+        setLoadingTx(false);
       }
-    }, [destination, amount]);
+    };
+
+  loadTxs();
+
+  const timer = setInterval(() => {
+    refresh();
+  },30000);
+  return () => clearInterval(timer);
+
+  // eslint-disable-next-line react-hooks/exhaustive-dep
+  }, [activeAccount?.address]);
+
+  useEffect(() => {
+    if (!txMessage) return;
+
+    setIsFading(false);
+
+    const fadeTimer = setTimeout(() => {
+      setIsFading(true);
+    },4000);
+
+    const clearTimer = setTimeout(() => {
+      setTxMessage("");
+      setTxHash("");
+      setIsFading(false);
+    },4000);
+
+    return() => {
+      clearTimeout(fadeTimer);
+      clearTimeout(clearTimer);
+    } 
+  }, [txMessage]);
+
+  useEffect(() => {
+    if (txType === "error" && txMessage) {
+      setTxMessage("");
+      setTxHash("");
+      setTxType("success");
+    }
+  }, [destination, amount]);
+
+  const normalisedTxs = txs
+    .map((tx) => {
+      return normaliseTransaction(tx, activeAccount?.address)
+    })
+    .filter(Boolean);
 
   return (
     <div className="grid gap-6">
@@ -280,41 +287,44 @@ const Dashboard = () => {
                   <div className="text-sm text-slate-500">Loading ...</div>
                 )}
 
-                {!loadingTx && txs.length === 0 && (
+                {!loadingTx && normalisedTxs.length === 0 && (
                   <div className="text-sm text-slate-500">
                     No transactions yet
                   </div>
                 )}
 
-                <div className="space-y-2">
-                  {txs.map((tx) => normaliseTransaction(tx, activeAccount.address))
-                    .filter(Boolean)
-                    .map((tx,i) => {
+                {!loadingTx && normalisedTxs.length > 0 && (
+                  <div className="space-y-2">
+                    {normalisedTxs.map((tx,i) => (
                       <div
                         key={tx.hash || i}
                         className="rounded-md border border-slate-800 bg-slate-900/50 p-3 text-xs"
                       >
                         <div className="flex justify-between">
                           <span
-                            className={tx.incoming ? "text-emerald-400" : "text-rose-400"}>
+                            className={
+                              tx.incoming ? "text-emerald-400" : "text-rose-400"
+                            }
+                          >
                             {tx.direction}
                           </span>
-
-                          <span>{tx.amount}  XRP</span>
+                          <span>{tx.amount} XRP</span>
                         </div>
 
                         <div className="mt-1 break-all text-slate-300">
                             {tx.counterparty}
-                            {tx.timestamp && (
-                              <div className="mt-1 text-[10px] text-slate-500">
-                                {new Date(tx.timestamp).toLocaleString()}
-                              </div>
-                            )}
-                        </div>                        
+                        </div>
+
+                        {tx.timestamp && (
+                          <div className="mt-1 text-[10px] text-slate-500">
+                            {new Date(tx.timestamp).toLocaleString()}
+                          </div>
+                        )}
                       </div>
-                    })
-                  }
-                </div>
+                    ))}
+                  </div>
+                )}
+
               </div>
             </>
           )}
