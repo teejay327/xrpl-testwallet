@@ -292,7 +292,7 @@ const Dashboard = () => {
                 )}
 
                 {!loadingTx && normalisedTxs.length === 0 && (
-                  <div className="text-sm text-slate-500">
+                  <div className="text-sm text-slate-400">
                     No transactions yet
                   </div>
                 )}
