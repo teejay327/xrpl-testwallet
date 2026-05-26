@@ -310,7 +310,7 @@ const Dashboard = () => {
                               tx.incoming ? "text-emerald-400" : "text-sky-400"
                             }
                           >
-                            {tx.direction}
+                            {tx.incoming ? "↑ Received" : "↓ Sent"}
                           </span>
                           <span>{tx.amount} XRP</span>
                         </div>
@@ -321,9 +321,20 @@ const Dashboard = () => {
 
                         {tx.timestamp && (
                           <div className="mt-1 text-[10px] text-slate-500">
-                            {new Date(tx.timestamp).toLocaleString()}
+                            {timeAgo(tx.timestamp)}
                           </div>
                         )}
+
+                        {tx.hash && (
+                          <a
+                            href={`https://testnet.xrpl.org/transactions/${txHash}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-emerald-400 underline hover:text-emerald-200"
+                          >
+                            View on Explorer
+                          </a>
+                        )}                        
                       </div>
                     ))}
                   </div>
