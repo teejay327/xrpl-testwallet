@@ -282,15 +282,17 @@ const Dashboard = () => {
                 )}
               </div>
 
-              <div className="mb-2 flex items-center justify-between">
-                <div className="mtext-sm text-slate-400">
+              <div className="mb-2 flex items-center gap-2">
+                <div className="text-sm text-slate-400">
                   Recent transactions
                 </div>
 
                 <div className="rounded-full bg-slate-800 px-2 py-0.5 text-[10px] text-slate-400">
                   {normalisedTxs.length}
                 </div>
+              </div>
 
+              <div>
                 {loadingTx && (
                   <div className="text-sm text-slate-500">Loading ...</div>
                 )}
