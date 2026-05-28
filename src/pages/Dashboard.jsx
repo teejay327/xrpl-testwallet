@@ -154,7 +154,7 @@ const Dashboard = () => {
       setTxMessage("");
       setTxHash("");
       setIsFading(false);
-    },4000);
+    },5000);
 
     return() => {
       clearTimeout(fadeTimer);
@@ -268,7 +268,7 @@ const Dashboard = () => {
                         
                           <div className="mt-1">
                           <a
-                            href={`https://testnet.xrpl.org/transactions/${txHash}`}
+                            href={`https://testnet.xrpl.org/search/${txHash}`}
                             target="_blank"
                             rel="noreferrer"
                             className="text-emerald-400 underline hover:text-emerald-200"
@@ -284,7 +284,7 @@ const Dashboard = () => {
 
               <div className="mb-2 flex items-center gap-2">
                 <div className="text-sm text-slate-400">
-                  Recent transactions
+                  Latest transactions
                 </div>
 
                 <div className="rounded-full bg-slate-800 px-2 py-0.5 text-[10px] text-slate-400">
@@ -332,14 +332,20 @@ const Dashboard = () => {
                         )}
 
                         {tx.hash && (
-                          <a
-                            href={`https://testnet.xrpl.org/transactions/${txHash}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-emerald-400 underline hover:text-emerald-200"
-                          >
-                            View on Explorer
-                          </a>
+                          <>
+                            <a
+                              href={`https://testnet.xrpl.org/search/${tx.hash}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-emerald-400 underline hover:text-emerald-200"
+                            >
+                              View on XRPL Explorer
+                            </a>
+                          
+                            <div className="text-[10px] text-slate-500 break-all">
+                              Link hash: {tx.hash || "NO HASH"}
+                            </div>                       
+                          </>                         
                         )}                        
                       </div>
                     ))}
