@@ -177,6 +177,14 @@ const Dashboard = () => {
     .filter(Boolean)
     .sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
 
+  const totalSent = normalisedTxs
+    .filter((tx) => !tx.incoming)
+    .reduce((sum,tx) => sum + tx.amount,0);
+
+  const totalReceived = normalisedTxs
+    .filter(tx => tx.incoming)
+    .reduce((sum,tx) => sum + tx.amount,0)
+
   return (
     <div className="grid gap-6">
       <Card>
@@ -282,6 +290,16 @@ const Dashboard = () => {
                 )}
               </div>
 
+              <div mb-4 flex gap-4 text-sm>
+                <div className="text-sky-400">
+                  Total Sent {totalSent.toFixed(2)} XRP
+                </div>
+
+                <div className="text-sky-400">
+                  Total Received {totalReceived.toFixed(2)} XRP
+                </div>
+              </div>
+
               <div className="mb-2 flex items-center gap-2">
                 <div className="text-sm text-slate-400">
                   Latest transactions
@@ -318,7 +336,7 @@ const Dashboard = () => {
                           >
                             {tx.incoming ? "↑ Received" : "↓ Sent"}
                           </span>
-                          <span>{tx.amount} XRP</span>
+                          <span>{tx.amount.toFixed(2)} XRP</span>
                         </div>
 
                         <div className="mt-1 break-all text-slate-300">
@@ -332,7 +350,6 @@ const Dashboard = () => {
                         )}
 
                         {tx.hash && (
-                          <>
                             <a
                               href={`https://testnet.xrpl.org/search/${tx.hash}`}
                               target="_blank"
@@ -340,12 +357,7 @@ const Dashboard = () => {
                               className="text-emerald-400 underline hover:text-emerald-200"
                             >
                               View on XRPL Explorer
-                            </a>
-                          
-                            <div className="text-[10px] text-slate-500 break-all">
-                              Link hash: {tx.hash || "NO HASH"}
-                            </div>                       
-                          </>                         
+                            </a>                                         
                         )}                        
                       </div>
                     ))}
