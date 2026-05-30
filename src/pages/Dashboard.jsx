@@ -28,6 +28,7 @@ const Dashboard = () => {
 
   const [txs,setTxs] = useState([]);
   const [loadingTx,setLoadingTx] = useState(false);
+  const [txFilter, setTxFilter] = useState("all");
 
   const [isFading, setIsFading] = useState(false);
 
@@ -183,7 +184,13 @@ const Dashboard = () => {
 
   const totalReceived = normalisedTxs
     .filter(tx => tx.incoming)
-    .reduce((sum,tx) => sum + tx.amount,0)
+    .reduce((sum,tx) => sum + tx.amount,0);
+
+  const filteredTxs = normalisedTxs.filter((tx) => {
+    if (txFilter === "sent") return !tx.incoming;
+    if (txFilter === "received") return tx.incoming;
+    return true;
+  });
 
   return (
     <div className="grid gap-6">
@@ -300,30 +307,52 @@ const Dashboard = () => {
                 </div>
               </div>
 
+
+
+
               <div className="mb-2 flex items-center gap-2">
                 <div className="text-sm text-slate-400">
                   Latest transactions
                 </div>
 
                 <div className="rounded-full bg-slate-800 px-2 py-0.5 text-[10px] text-slate-400">
-                  {normalisedTxs.length}
+                  {filteredTxs.length}
                 </div>
               </div>
 
               <div>
+                <div className="mb-3 flex gap-2">
+                  {["all","sent","received"].map((filter) => (
+                    <button
+                      key={filter}
+                      type="button"
+                      onClick={() => setTxFilter(filter)}
+                      className={
+                        "rounded-full border px-3 py-1 text-xs transition " +
+                        (txFilter === filter
+                          ? "border-emerald-500/60 bg-emerald-500/10 text-emerald-300"
+                          : "border-slate-700 bg-slate-900/40 text-slate-400 hover:text-slate-200")
+                      }
+                    >
+                      {filter === "all" ? "All" : filter === "sent" ? "Sent" : "Received"}
+                    </button>
+                  ))}
+                </div>
+
                 {loadingTx && (
                   <div className="text-sm text-slate-500">Loading ...</div>
                 )}
 
-                {!loadingTx && normalisedTxs.length === 0 && (
+                {!loadingTx && filteredTxs.length === 0 && (
                   <div className="text-sm text-slate-400">
                     No transactions yet
                   </div>
                 )}
 
-                {!loadingTx && normalisedTxs.length > 0 && (
+
+                {!loadingTx && filteredTxs.length > 0 && (
                   <div className="space-y-2">
-                    {normalisedTxs.map((tx,i) => (
+                    {filteredTxs.map((tx,i) => (
                       <div
                         key={tx.hash || i}
                         className="rounded-md border border-slate-800 bg-slate-900/50 p-3 text-xs"
