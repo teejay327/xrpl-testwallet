@@ -36,17 +36,14 @@ const WalletProvider = ({ children }) => {
   }, [accounts, activeId]);
     
   const addAccount = (account) => {
-    console.log("addAccount called with:", account);
+    // console.log("addAccount called with:", account);
     
     setAccounts((prev) => {
       const next = [account, ...prev];
-      console.log("next account:", next);
+      // console.log("next account:", next);
       return next;
     });
       
-
-
-
     setActiveId(account.id);
   };
 
@@ -60,15 +57,14 @@ const WalletProvider = ({ children }) => {
     });
   };
 
-
   const selectAccount = (id) => {
     console.log("Selecting Account:", id);
     setActiveId(id);
   }
     
-  console.log("accounts:", accounts);
-  console.log("activeId:", activeId);
-  console.log("activeAccount:", activeAccount);
+  // console.log("accounts:", accounts);
+  // console.log("activeId:", activeId);
+  // console.log("activeAccount:", activeAccount);
 
   return (
     <WalletContext.Provider

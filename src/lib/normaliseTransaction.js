@@ -4,7 +4,6 @@ const normaliseTransaction = (rawTx, activeAddress) => {
 
 //console.log("HASH:", rawTx.hash || tx?.hash);
 
-
   if (!tx || tx.TransactionType !== "Payment") return null;
 
   const amountValue = tx.Amount || tx.DeliverMax;

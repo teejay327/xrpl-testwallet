@@ -17,7 +17,7 @@ const sendXrp = async ({ seed, destination, amount }) => {
   const prepared = await client.autofill(payment);
   const signed = wallet.sign(prepared);
   const result = await client.submitAndWait(signed.tx_blob);
-  console.log("sendXrp: result =", result);
+  // console.log("sendXrp: result =", result);
 
   if (!result?.result?.hash) {
     throw new Error("Transaction failed - no hash returned");

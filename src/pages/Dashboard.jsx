@@ -186,6 +186,8 @@ const Dashboard = () => {
     .filter(tx => tx.incoming)
     .reduce((sum,tx) => sum + tx.amount,0);
 
+  const netAmount = totalReceived - totalSent;
+
   const filteredTxs = normalisedTxs.filter((tx) => {
     if (txFilter === "sent") return !tx.incoming;
     if (txFilter === "received") return tx.incoming;
@@ -307,8 +309,13 @@ const Dashboard = () => {
                 </div>
               </div>
 
-
-
+              <div
+                className={`text-sm ${
+                  netAmount >= 0 ? "text-emerald-400" : "text-sky-400"
+                }`}
+              >
+                Net amount for this wallet: {netAmount.toFixed(2)} XRP
+              </div>
 
               <div className="mb-2 flex items-center gap-2">
                 <div className="text-sm text-slate-400">
@@ -316,7 +323,7 @@ const Dashboard = () => {
                 </div>
 
                 <div className="rounded-full bg-slate-800 px-2 py-0.5 text-[10px] text-slate-400">
-                  {filteredTxs.length}
+                  {filteredTxs.length === 10 ? "Latest 10" : filteredTxs.length}
                 </div>
               </div>
 
@@ -348,7 +355,6 @@ const Dashboard = () => {
                     No transactions yet
                   </div>
                 )}
-
 
                 {!loadingTx && filteredTxs.length > 0 && (
                   <div className="space-y-2">
