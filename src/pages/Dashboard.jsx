@@ -299,22 +299,35 @@ const Dashboard = () => {
                 )}
               </div>
 
-              <div mb-4 flex gap-4 text-sm>
-                <div className="text-sky-400">
-                  Total Sent {totalSent.toFixed(2)} XRP
+              <div className="mb-4 rounded-md border border-slate-800 bg-slate-900/40 p-3">
+                <div className="mb-2 text-xs font-medium text-slte-400">
+                  Summary
                 </div>
 
-                <div className="text-sky-400">
-                  Total Received {totalReceived.toFixed(2)} XRP
-                </div>
-              </div>
+                <div className="space-y-1  text-xs">
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Sent</span>
+                    <span classname="text-slate-400">
+                      {totalSent.toFixed(2)} XRP
+                    </span>
+                  </div>
 
-              <div
-                className={`text-sm ${
-                  netAmount >= 0 ? "text-emerald-400" : "text-sky-400"
-                }`}
-              >
-                Net amount for this wallet: {netAmount.toFixed(2)} XRP
+                  <div className="space-y-1 text-xs">
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Received</span>
+                      <span className="text-slate-400">
+                        {totalReceived.toFixed(2)} XRP
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between border-t border-slate-800 pt-1">
+                    <span className="text-slate-400">Net amount for this wallet</span>
+                    <span className={netAmount >= 0 ? "text-emerald-400" : "text-sky-400"}>
+                      {netAmount.toFixed(2)} XRP
+                    </span>
+                  </div>
+                </div>               
               </div>
 
               <div className="mb-2 flex items-center gap-2">
