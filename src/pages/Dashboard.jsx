@@ -324,7 +324,7 @@ const Dashboard = () => {
                   <div className="flex justify-between border-t border-slate-800 pt-1">
                     <span className="text-slate-400">Net amount for this wallet</span>
                     <span className={netAmount >= 0 ? "text-emerald-400" : "text-sky-400"}>
-                      {netAmount.toFixed(2)} xrp
+                      {netAmount.toFixed(2)} XRP
                     </span>
                   </div>
                 </div>               
