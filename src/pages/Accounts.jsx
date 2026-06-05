@@ -249,7 +249,12 @@ const onImport = () => {
                   <div className="flex items-center gap-2 font-semibold text-slate-100">
                     <span>{a.label} </span>
                     
-                    {active && <span className="text-emerald-400 text-xs">(active)</span>}  
+                    {active && (
+                      <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 
+                        text-[10px] font-medium text-emerald-300 ring-1 ring-emerald-500/30">
+                        Active
+                      </span>
+                    )}
 
                     {a.seed ? (
                       <span className="text-emerald-400 text-[10px] border border-emerald-500/40 px-1 rounded">
@@ -309,7 +314,7 @@ const onImport = () => {
 
                   <button
                     type="button"
-                    className="text-xs test-slate-400 hover:text-slate-200"
+                    className="text-xs text-slate-400 hover:text-slate-200"
                     onClick={() => handleRename(a)}
                   >
                     Rename
@@ -318,7 +323,11 @@ const onImport = () => {
                   <Button 
                     variant="ghost" 
                     size="sm"  
-                    onClick={() => removeAccount(a.id)}
+                    onClick={() => {
+                      if (window.confirm(`Remove ${a.label}?`)) {
+                        removeAccount(a.id);
+                      }
+                    }} 
                   >
                     Remove
                   </Button>

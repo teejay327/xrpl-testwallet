@@ -6,8 +6,17 @@ const LS_ACCOUNTS = "xrpl_accounts_v1";
 const LS_ACTIVE = "xrpl_active_account_v1";
 
 const WalletProvider = ({ children }) => {
-  const [accounts, setAccounts] = useState([]);
-  const [activeId, setActiveId ] = useState(null);
+  const [accounts, setAccounts] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem(LS_ACCOUNTS) || "[]");
+    } catch {
+      return [];
+    }
+  });
+
+  const [activeId, setActiveId ] = useState(() => {
+    return localStorage.getItem(LS_ACTIVE) || null;
+  });
 
   // Load from localStorage
   useEffect(() => {
@@ -28,7 +37,11 @@ const WalletProvider = ({ children }) => {
   }, [accounts]);
 
   useEffect(() => {
-    if (activeId) localStorage.setItem(LS_ACTIVE, activeId);
+    if (activeId) {
+      localStorage.setItem(LS_ACTIVE, activeId);
+    } else {
+      localStorage.removeItem(LS_ACTIVE);
+    }
   }, [activeId]);
 
   const activeAccount = useMemo(() => {
@@ -62,13 +75,18 @@ const WalletProvider = ({ children }) => {
     setActiveId(id);
   }
     
+  const renameAccount = (id,newLabel) => {
+    setAccounts((prev) =>
+      prev.map((account) => account.id === id ? { ...account, label: newLabel } : account )
+    )
+  };
   // console.log("accounts:", accounts);
   // console.log("activeId:", activeId);
   // console.log("activeAccount:", activeAccount);
 
   return (
     <WalletContext.Provider
-      value={{ accounts, activeAccount, activeId, addAccount, removeAccount, selectAccount }}
+      value={{ accounts, activeAccount, activeId, addAccount, removeAccount, selectAccount, renameAccount }}
     >
       {children}
     </WalletContext.Provider>
