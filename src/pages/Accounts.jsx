@@ -9,83 +9,83 @@ import { isValidClassicAddress, Wallet  } from "xrpl";
 const short = (s) => (s ? `${s.slice(0,6)}...${s.slice(-6)}` : "");
 
 const Accounts = () => {
-  const {accounts, activeId, selectAccount, addAccount, removeAccount} = useWallet();
-  const [label, setLabel] = useState("");
-  const [address, setAddress] = useState("");
-  const [seed,setSeed] = useState("");
-  const [error, setError] = useState("");
-  const [revealedId, setRevealedId] = useState(null);
-  const [copiedId, setCopiedId] = useState(null);
-  const [copiedAddressId, setCopiedAddressId] = useState(null);
+const {accounts, activeId, selectAccount, addAccount, removeAccount, renameAccount} = useWallet();
+const [label, setLabel] = useState("");
+const [address, setAddress] = useState("");
+const [seed,setSeed] = useState("");
+const [error, setError] = useState("");
+const [revealedId, setRevealedId] = useState(null);
+const [copiedId, setCopiedId] = useState(null);
+const [copiedAddressId, setCopiedAddressId] = useState(null);
 
-  const trimmedAddress = address.trim();
-  const trimmedSeed = seed.trim();
-  const trimmedLabel = label.trim();
+const trimmedAddress = address.trim();
+const trimmedSeed = seed.trim();
+const trimmedLabel = label.trim();
 
-  const canAdd = trimmedAddress.length > 0;
-  const canImport = trimmedSeed.length > 0;
+const canAdd = trimmedAddress.length > 0;
+const canImport = trimmedSeed.length > 0;
 
-  const onClear = () => {
-    setLabel("");
-    setAddress("");
-    setSeed("");
-    setError("");
+const onClear = () => {
+  setLabel("");
+  setAddress("");
+  setSeed("");
+  setError("");
+}
+
+const onAdd = () => {
+  if (!isValidClassicAddress(trimmedAddress)) {
+    setError("Invalid XRPL address - it must be at least 25 characters starting with r");
+    return;
   }
 
-  const onAdd = () => {
-    if (!isValidClassicAddress(trimmedAddress)) {
-      setError("Invalid XRPL address - it must be at least 25 characters starting with r");
-      return;
-    }
+setError("");
 
-    setError("");
+  addAccount({
+    id: crypto.randomUUID(),
+    label: trimmedLabel || "Watch Account",
+    address: trimmedAddress
+  });
 
-    addAccount({
+  onClear();
+};
+
+const onGenerate = () => {
+  const wallet = Wallet.generate();
+
+  addAccount({
+    id: crypto.randomUUID(),
+    label: trimmedLabel || `Testnet Wallet ${accounts.length + 1}`,
+    address: wallet.address,
+    seed: wallet.seed
+  });
+
+  onClear();
+}
+
+const onImport = () => {
+  console.log("onImport fired");
+  console.log("trimmedSeed:", trimmedSeed);
+  try {
+    const wallet = Wallet.fromSeed(trimmedSeed);
+    console.log("Imported Wallet:", wallet.address);
+
+    const accountToAdd = {
       id: crypto.randomUUID(),
-      label: trimmedLabel || "Watch Account",
-      address: trimmedAddress
-    });
-
-    onClear();
-  };
-
-  const onGenerate = () => {
-    const wallet = Wallet.generate();
-
-    addAccount({
-      id: crypto.randomUUID(),
-      label: trimmedLabel || `Testnet Wallet ${accounts.length + 1}`,
+      label: trimmedLabel || `Imported Wallet ${accounts.length + 1}`,
       address: wallet.address,
-      seed: wallet.seed
-    });
-
-    onClear();
-  }
-
-  const onImport = () => {
-    console.log("onImport fired");
-    console.log("trimmedSeed:", trimmedSeed);
-    try {
-      const wallet = Wallet.fromSeed(trimmedSeed);
-      console.log("Imported Wallet:", wallet.address);
-
-      const accountToAdd = {
-        id: crypto.randomUUID(),
-        label: trimmedLabel || `Imported Wallet ${accounts.length + 1}`,
-        address: wallet.address,
-        seed: trimmedSeed
-      }
-
-      console.log("Adding account", accountToAdd);
-
-      setError("");
-      addAccount(accountToAdd);
-      onClear();
-    } catch(err) {
-      console.error("IMPORT ERROR", err);
-      setError("Invalid seed - unable to import wallet.");
+      seed: trimmedSeed
     }
+
+    console.log("Adding account", accountToAdd);
+
+    setError("");
+    addAccount(accountToAdd);
+    onClear();
+  } catch(err) {
+    console.error("IMPORT ERROR", err);
+    setError("Invalid seed - unable to import wallet.");
   }
+}
 
   const onKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -138,6 +138,15 @@ const Accounts = () => {
     }
   }
 
+  const handleRename = (account) => {
+    const newLabel = window.prompt("Enter new account label:", account.label);
+
+    if (!newLabel) return;
+    const trimmedLabel = newLabel.trim();
+    if (!trimmedLabel) return;
+    renameAccount(account.id, trimmedLabel);
+  };
+
   return (
     <div className="grid gap-6">
       <Card>
@@ -180,6 +189,7 @@ const Accounts = () => {
               Seed state: {seed || "(empty)"}
             </div>
           </div>
+
 
           {error && (
             <div className="text-sm text-rose-400">
@@ -296,6 +306,14 @@ const Accounts = () => {
                       </button>
                     </>
                   )}
+
+                  <button
+                    type="button"
+                    className="text-xs test-slate-400 hover:text-slate-200"
+                    onClick={() => handleRename(a)}
+                  >
+                    Rename
+                  </button>
 
                   <Button 
                     variant="ghost" 
