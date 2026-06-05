@@ -147,6 +147,12 @@ const onImport = () => {
     renameAccount(account.id, trimmedLabel);
   };
 
+  const sortedAccounts = [...accounts].sort((a,b) => {
+    if (a.id === activeId) return -1;
+    if (b.id === activeId) return 1;
+    return 0;
+  })
+
   return (
     <div className="grid gap-6">
       <Card>
@@ -229,7 +235,7 @@ const onImport = () => {
             </div>
           )}
 
-          {accounts.map((a) => {
+          {sortedAccounts.map((a) => {
             const active = a.id === activeId;
 
             return(
@@ -258,11 +264,11 @@ const onImport = () => {
 
                     {a.seed ? (
                       <span className="text-emerald-400 text-[10px] border border-emerald-500/40 px-1 rounded">
-                        signing
+                        Can send
                       </span>
                     ): (
                       <span className="text-amber-400 text-[10px] border border-amber-500/40 px-1 rounded">
-                        watch
+                        Watch only
                       </span>
                     )}            
                   </div>
