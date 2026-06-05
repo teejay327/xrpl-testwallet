@@ -320,15 +320,15 @@ const onImport = () => {
 
                   <button
                     type="button"
-                    className="text-xs text-slate-400 hover:text-slate-200"
+                    className="text-xs text-slate-300 hover:text-slate-200"
                     onClick={() => handleRename(a)}
                   >
                     Rename
                   </button>
 
-                  <Button 
-                    variant="ghost" 
-                    size="sm"  
+                  <button 
+                    type="button" 
+                    className="text-xs text-slate-500 hover:text-rose-300 transition"
                     onClick={() => {
                       if (window.confirm(`Remove ${a.label}?`)) {
                         removeAccount(a.id);
@@ -336,7 +336,7 @@ const onImport = () => {
                     }} 
                   >
                     Remove
-                  </Button>
+                  </button>
                 </div>
               </div>
             );
