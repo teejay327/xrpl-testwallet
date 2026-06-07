@@ -151,7 +151,11 @@ const onImport = () => {
     if (a.id === activeId) return -1;
     if (b.id === activeId) return 1;
     return 0;
-  })
+  });
+
+  const totalAccounts = accounts.length;
+  const signingAccounts = accounts.filter((a) => a.seed).length;
+  const watchOnlyAccounts = accounts.filter((a) => !a.seed).length
 
   return (
     <div className="grid gap-6">
@@ -221,6 +225,31 @@ const onImport = () => {
             Clear
           </Button>
         </CardFooter>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Wallet statistics</CardTitle>
+        </CardHeader>
+
+        <CardContent>
+          <div className="grid max-w-xs grid-cols-[1fr_auto] gap-x-4 gap-y-2 text-sm">
+              <span className="text-slate-400">Total accounts</span>
+              <span className="rounded-full bg-slate-800 px-2 py-0.5 text-xs text-slate-100">
+                {totalAccounts}
+              </span>
+  
+              <span className="text-slate-400">Can send</span>
+              <span className="rounded-full bg-emerald-500/10 px-2 py--0.5 text-xs text-emerald-300">
+                {signingAccounts}
+              </span>
+
+              <span className="text-slate-400">Watch only</span>
+              <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-xs text-amber-300">
+                {watchOnlyAccounts}
+              </span>
+          </div>
+        </CardContent>
       </Card>
 
       <Card>
