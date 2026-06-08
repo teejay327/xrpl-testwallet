@@ -210,24 +210,45 @@ const Dashboard = () => {
           
           {activeAccount && (
             <>
-              <div className="text-sm text-slate-400">Active account</div>
-              <div className="font-mono text-sm text-emerald-400">
-                {short(activeAccount.address)}
-              </div>
-
-              <div className="mt-2 text-sm text-slate-400">Balance</div>
-              <div className="text-3xl font-bold">
-                {loading ? "loading" : `${balance ?? "-"} XRP`}
-              </div>
-              <div className="text-xs text-slate-400">
-                Auto-refresh every 30 secs
-              </div>
-
-              {!activeAccount?.seed && (
-                <div className="mt-2 text-xs text-amber-400">
-                  Watch-only account - sending is disabled
+              <div className="mb-6 rounded-md border border-slate-800 bg-slate-900/40 p-3">
+                <div className="mb-2 text-xs font-medium text-slate-400">
+                  Active wallet
                 </div>
-              )}
+
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-slate-100">
+                    {activeAccount?.label || "Unnamed wallet"}
+                  </span>
+
+                  <span
+                    className={
+                      activeAccount?.seed
+                        ? "rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] text-emerald-300 ring-1 ring-emerald-500/30"
+                        : "rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] text-amber-300 ring-1 ring-amber-500/30"
+                    }
+                  >
+                    {activeAccount?.seed ? "Can send" : "Watch only"}
+                  </span>
+                </div>
+
+                <div className="mt-1 text-xs text-emerald-400">
+                  {short(activeAccount.address)}
+                </div>
+              </div>
+              
+              <div className="mt-2 text-sm text-slate-400">Balance</div>
+                <div className="text-3xl font-bold">
+                  {loading ? "loading" : `${balance ?? "-"} XRP`}
+                </div>
+                <div className="text-xs text-slate-400">
+                  Auto-refresh every 30 secs
+                </div>
+
+                {!activeAccount?.seed && (
+                  <div className="mt-2 text-xs text-amber-400">
+                    Watch-only account - sending is disabled
+                  </div>
+                )}
 
               {err && (
                 <div className="text-sm text-rose-400">
