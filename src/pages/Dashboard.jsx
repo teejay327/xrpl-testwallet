@@ -31,6 +31,7 @@ const Dashboard = () => {
   const [txFilter, setTxFilter] = useState("all");
 
   const [isFading, setIsFading] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
 
   const isValidXrplAddress = addr => /^r[1-9A-HJ-NP-Za-km-z]{24,34}$/.test(addr.trim());
 
@@ -39,8 +40,9 @@ const Dashboard = () => {
       try {
         setErr("");
         setLoading(true);
-        const b = await getBalance(activeAccount.address);
-        setBalance(b);
+        const balance = await getBalance(activeAccount.address);
+        setBalance(balance);
+        setLastUpdated(new Date());
       } catch (e) {
         setErr(e?.message ?? String(e));
         setBalance(null);
@@ -242,6 +244,12 @@ const Dashboard = () => {
                 </div>
                 <div className="text-xs text-slate-400">
                   Auto-refresh every 30 secs
+
+                  {lastUpdated && (
+                    <div className="text-xs text-slate-400">
+                      Last updated: {lastUpdated.toLocaleTimeString()}
+                    </div>
+                  )}
                 </div>
 
                 {!activeAccount?.seed && (
@@ -385,8 +393,14 @@ const Dashboard = () => {
                 )}
 
                 {!loadingTx && filteredTxs.length === 0 && (
-                  <div className="text-sm text-slate-400">
-                    No transactions yet
+                  <div className="m-4 text-xs border border-slate-400">
+                    <div className="text-sm text-slate-400">
+                      No transactions yet
+                    </div>
+   
+                    <div>
+                      Send or receive XRP to begin building your transaction history
+                    </div>
                   </div>
                 )}
 
