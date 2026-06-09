@@ -393,12 +393,12 @@ const Dashboard = () => {
                 )}
 
                 {!loadingTx && filteredTxs.length === 0 && (
-                  <div className="m-4 text-xs border border-slate-400">
+                  <div className="text-xs border rounded-lg border-slate-800 bg-slate-900/30 p-4">
                     <div className="text-sm text-slate-400">
                       No transactions yet
                     </div>
    
-                    <div>
+                    <div className="mt-1 txt-sm text-slate-400">
                       Send or receive XRP to begin building your transaction history
                     </div>
                   </div>
