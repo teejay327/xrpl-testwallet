@@ -83,8 +83,6 @@ const Dashboard = () => {
         destination,
         amount
       });
-      
-      console.log("Dashboard: send complete", hash);
 
       setTxType("success");
       setTxMessage(`Sent ${amount} XRP successfully`);
@@ -99,7 +97,6 @@ const Dashboard = () => {
       setAmount("");
 
     } catch (err) {
-      console.error("SEND ERROR:", err);
       setTxType("error");
       setTxMessage(err?.message || "Transaction failed");
       setTxHash("");
@@ -118,14 +115,6 @@ const Dashboard = () => {
 
       try {
         const data = await getTransactions(activeAccount.address);
-
-        console.log("Raw History", data);
-        console.log("Normalised history:",
-          data.map((tx) => normaliseTransaction(tx, activeAccount.address))
-        );
-
-
-        console.log("Fetched TXS:", data);
         setTxs(data);
       } catch(err) {
         console.error("TX LOAD ERROR:", err);
@@ -395,7 +384,7 @@ const Dashboard = () => {
                 {!loadingTx && filteredTxs.length === 0 && (
                   <div className="text-xs border rounded-lg border-slate-800 bg-slate-900/30 p-4">
                     <div className="text-sm text-slate-400">
-                      No transactions
+                      No transactions yet
                     </div>
    
                     <div className="mt-1 txt-sm text-slate-400">

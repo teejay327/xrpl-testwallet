@@ -1,10 +1,10 @@
-const Receive = () => {
+// const Receive = () => {
 
-  return (
-    <div>
-      <p>Receive</p>
-    </div>
-  )
-};
+//   return (
+//     <div>
+//       <p>Receive</p>
+//     </div>
+//   )
+// };
 
-export default Receive;
+// export default Receive;

@@ -1,9 +1,10 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useWallet } from "../context/WalletContext.jsx";
 import Card, { CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from "../components/ui/Card.jsx";
 import Button from "../components/ui/Button.jsx";
 import Input from "../components/ui/Input.jsx";
 import Label from "../components/ui/Label.jsx";
+import { getBalance } from "../xrpl/client.js";
 import { isValidClassicAddress, Wallet  } from "xrpl";
 
 const short = (s) => (s ? `${s.slice(0,6)}...${s.slice(-6)}` : "");
@@ -17,6 +18,8 @@ const [error, setError] = useState("");
 const [revealedId, setRevealedId] = useState(null);
 const [copiedId, setCopiedId] = useState(null);
 const [copiedAddressId, setCopiedAddressId] = useState(null);
+const [balances,setBalances] = useState({});
+const [loadingBalances,setLoadingBalances] = useState(false);
 
 const trimmedAddress = address.trim();
 const trimmedSeed = seed.trim();
@@ -63,11 +66,9 @@ const onGenerate = () => {
 }
 
 const onImport = () => {
-  console.log("onImport fired");
-  console.log("trimmedSeed:", trimmedSeed);
   try {
     const wallet = Wallet.fromSeed(trimmedSeed);
-    console.log("Imported Wallet:", wallet.address);
+
 
     const accountToAdd = {
       id: crypto.randomUUID(),
@@ -75,8 +76,6 @@ const onImport = () => {
       address: wallet.address,
       seed: trimmedSeed
     }
-
-    console.log("Adding account", accountToAdd);
 
     setError("");
     addAccount(accountToAdd);
@@ -146,6 +145,51 @@ const onImport = () => {
     if (!trimmedLabel) return;
     renameAccount(account.id, trimmedLabel);
   };
+
+  useEffect(() => {
+    const loadBalances = async() => {
+      console.log("Loading balances for", accounts.length, "accounts");
+      if (accounts.length === 0) {
+        setBalances({});
+        return;
+      }
+
+      setLoadingBalances(true);
+
+      try {
+        const results = await Promise.all(
+          accounts.map(async (account) => {
+            try {
+              const balance = await getBalance(account.address);
+              console.log("Balance for", account.label, "=", balance);
+              return {
+                address: account.address,
+                balance
+              };
+            } catch {
+              return {
+                address: account.address,
+                balance: null
+              };
+            }
+          })
+        );
+
+        const nextBalances = {};
+
+        results.forEach((item) => {
+          nextBalances[item.address] = item.balance;
+        });
+
+        setBalances(nextBalances);
+        console.log("Balances loaded", nextBalances);
+      } finally {
+        setLoadingBalances(false);
+      }
+    };
+
+    loadBalances();
+  }, [accounts]);
 
   const sortedAccounts = [...accounts].sort((a,b) => {
     if (a.id === activeId) return -1;
@@ -303,6 +347,20 @@ const onImport = () => {
                   </div>
 
                   <div className="text-xs text-slate-300">{short(a.address)}</div>
+                  <div className="text-xs text-slate-500">
+                    {String(balances[a.address])}
+                  </div>
+
+
+                  <div className="mt-1 text-xs text-slate-400">
+                    Balance:{" "}
+                    {loadingBalances
+                      ? "Loading..."
+                      : balances[a.address] !== null && balances[a.address] !== undefined
+                      ? `${Number(balances[a.address]).toFixed(2)} XRP`
+                      : "Unavailable"
+                    }
+                  </div>
 
                   {a.seed && revealedId === a.id && (
                     <div className="mt-2 rounded-md border border-amber-500/30 bg-amber-500/10 
