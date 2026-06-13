@@ -325,7 +325,7 @@ const Dashboard = () => {
                 <div className="space-y-1  text-xs">
                   <div className="flex justify-between">
                     <span className="text-slate-400">Sent</span>
-                    <span classname="text-slate-400">
+                    <span className="text-slate-400">
                       {totalSent.toFixed(2)} XRP
                     </span>
                   </div>

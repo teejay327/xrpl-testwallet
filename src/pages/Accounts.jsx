@@ -347,9 +347,6 @@ const onImport = () => {
                   </div>
 
                   <div className="text-xs text-slate-300">{short(a.address)}</div>
-                  <div className="text-xs text-slate-500">
-                    {String(balances[a.address])}
-                  </div>
 
 
                   <div className="mt-1 text-xs text-slate-400">
