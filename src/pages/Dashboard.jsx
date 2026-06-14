@@ -58,14 +58,31 @@ const Dashboard = () => {
       return;
     }
 
-    if (destination.trim() === activeAccount.address) {
+    const trimmedDestination = destination.trim();
+    const numericAmount = Number(amount);
+
+    if (!amount.trim()) {
+      setTxType("error");
+      setTxMessage("Please enter an amount");
+      setTxHash("");
+      return;
+    }
+
+    if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
+      setTxType("error");
+      setTxMessage("Amount must be greater than zero");
+      setTxHash("");
+      return;
+    }
+
+    if (trimmedDestination === activeAccount.address) {
       setTxType("error");
       setTxMessage("Cannot send XRP to the active account");
       setTxHash("");
       return;
     }
 
-    if (!isValidXrplAddress(destination)) {
+    if (!isValidXrplAddress(trimmedDestination)) {
       setTxType("error");
       setTxMessage("Invalid XRPL address");
       setTxHash("");
@@ -80,8 +97,8 @@ const Dashboard = () => {
 
       const hash = await sendXrp({
         seed: activeAccount.seed,
-        destination,
-        amount
+        destination: trimmedDestination,
+        amount: amount.trim()
       });
 
       setTxType("success");
@@ -277,7 +294,7 @@ const Dashboard = () => {
                 </div>
 
                 <Button onClick={handleSend} 
-                  disabled={sending || !activeAccount?.seed || !destination.trim() || !amount
+                  disabled={sending || !activeAccount?.seed
                 }>
                   {!activeAccount?.seed 
                     ? "Watch-only account" 
