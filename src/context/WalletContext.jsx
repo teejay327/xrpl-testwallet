@@ -49,8 +49,7 @@ const WalletProvider = ({ children }) => {
   }, [accounts, activeId]);
     
   const addAccount = (account) => {
-    // console.log("addAccount called with:", account);
-    
+   
     setAccounts((prev) => {
       const next = [account, ...prev];
       // console.log("next account:", next);
@@ -71,7 +70,6 @@ const WalletProvider = ({ children }) => {
   };
 
   const selectAccount = (id) => {
-    console.log("Selecting Account:", id);
     setActiveId(id);
   }
     
@@ -80,13 +78,23 @@ const WalletProvider = ({ children }) => {
       prev.map((account) => account.id === id ? { ...account, label: newLabel } : account )
     )
   };
-  // console.log("accounts:", accounts);
-  // console.log("activeId:", activeId);
-  // console.log("activeAccount:", activeAccount);
+
+  const exportAccounts = () => {
+    const data = JSON.stringify(accounts, null, 2);
+    const blob = new Blob([data], { type: "application/json"});
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "xrpl-wallet-backup.json";
+    link.click();
+
+    URL.revokeObjectURL(url);
+  }
 
   return (
     <WalletContext.Provider
-      value={{ accounts, activeAccount, activeId, addAccount, removeAccount, selectAccount, renameAccount }}
+      value={{ accounts, activeAccount, activeId, addAccount, removeAccount, selectAccount, renameAccount, exportAccounts }}
     >
       {children}
     </WalletContext.Provider>
