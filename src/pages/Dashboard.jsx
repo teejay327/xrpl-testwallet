@@ -52,7 +52,7 @@ const Dashboard = () => {
   }
 
   const handleSend = async() => {
-    console.log("Sending XRP...");
+    console.log("Sending XRP ...");
     if (!activeAccount?.seed) {
       console.error("No seed on active account");
       return;
