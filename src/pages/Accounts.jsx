@@ -10,7 +10,7 @@ import { isValidClassicAddress, Wallet  } from "xrpl";
 const short = (s) => (s ? `${s.slice(0,6)}...${s.slice(-6)}` : "");
 
 const Accounts = () => {
-const {accounts, activeId, selectAccount, addAccount, removeAccount, renameAccount} = useWallet();
+const {accounts, activeId, selectAccount, addAccount, removeAccount, renameAccount, exportAccounts } = useWallet();
 const [label, setLabel] = useState("");
 const [address, setAddress] = useState("");
 const [seed,setSeed] = useState("");
@@ -295,6 +295,13 @@ const onImport = () => {
           </div>
         </CardContent>
       </Card>
+
+      <Button
+        variant="outline"
+        onClick={exportAccounts}
+      >
+        Export Wallets
+      </Button>
 
       <Card>
         <CardHeader>
