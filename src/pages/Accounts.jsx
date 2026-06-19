@@ -296,12 +296,15 @@ const onImport = () => {
         </CardContent>
       </Card>
 
-      <Button
-        variant="outline"
-        onClick={exportAccounts}
-      >
-        Export Wallets
-      </Button>
+      <div className="mt-4 flex justify-center">
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={exportAccounts}
+        >
+          Export Wallets
+        </Button>
+      </div>
 
       <Card>
         <CardHeader>
