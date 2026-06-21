@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { useWallet } from "../context/WalletContext.jsx";
 import Card, { CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from "../components/ui/Card.jsx";
 import Button from "../components/ui/Button.jsx";
@@ -20,6 +20,7 @@ const [copiedId, setCopiedId] = useState(null);
 const [copiedAddressId, setCopiedAddressId] = useState(null);
 const [balances,setBalances] = useState({});
 const [loadingBalances,setLoadingBalances] = useState(false);
+const fileInputRef = useRef(null);
 
 const trimmedAddress = address.trim();
 const trimmedSeed = seed.trim();
@@ -191,6 +192,8 @@ const onImport = () => {
     loadBalances();
   }, [accounts]);
 
+  
+
   const sortedAccounts = [...accounts].sort((a,b) => {
     if (a.id === activeId) return -1;
     if (b.id === activeId) return 1;
@@ -296,7 +299,7 @@ const onImport = () => {
         </CardContent>
       </Card>
 
-      <div className="mt-4 flex justify-center">
+      <div className="mt-4 flex justify-center gap-3">
         <Button
           variant="secondary"
           size="sm"
@@ -304,6 +307,22 @@ const onImport = () => {
         >
           Export Wallets
         </Button>
+
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          Import Wallets
+        </Button>
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".json"
+          className="hidden"
+        />
+
       </div>
 
       <Card>
