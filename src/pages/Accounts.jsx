@@ -147,6 +147,15 @@ const onImport = () => {
     renameAccount(account.id, trimmedLabel);
   };
 
+  const handleImport = async(event) => {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+    const text = await file.text();
+    console.log("Imported file:")
+    console.log(text);
+  }
+
   useEffect(() => {
     const loadBalances = async() => {
       console.log("Loading balances for", accounts.length, "accounts");
@@ -321,8 +330,8 @@ const onImport = () => {
           type="file"
           accept=".json"
           className="hidden"
+          onChange={handleImport}
         />
-
       </div>
 
       <Card>
