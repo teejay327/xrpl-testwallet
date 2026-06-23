@@ -342,7 +342,7 @@ const onImport = () => {
         <CardContent className="grid gap-2">
           { accounts.length === 0 && (
             <div className="text-sm text-slate-300">
-              No accounts yet - please add one, generate one, or import one by seed.
+              No accounts yet - please add, generate, or import one by seed.
             </div>
           )}
 
