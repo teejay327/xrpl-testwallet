@@ -152,8 +152,23 @@ const onImport = () => {
 
     if (!file) return;
     const text = await file.text();
-    console.log("Imported file:")
-    console.log(text);
+    
+    const importedAccounts = JSON.parse(text);
+    console.log("Imported accounts:", importedAccounts);
+    
+    if (!Array.isArray(importedAccounts)) {
+      console.error("Imported backup is not an array");
+      return;
+    }
+
+    console.log("Valid account array:", importedAccounts.length);
+
+    const validAccounts = importedAccounts.filter((account) => {
+      return account?.label && account?.address;
+    });
+
+    console.log("Valid accounts:", validAccounts.length);
+    console.log(validAccounts);
   }
 
   useEffect(() => {
