@@ -169,6 +169,19 @@ const onImport = () => {
 
     console.log("Valid accounts:", validAccounts.length);
     console.log(validAccounts);
+
+    const existingAddresses = accounts.map((account) => account.address);
+
+    const newAccounts = validAccounts.filter((account) => {
+      return !existingAddresses.includes(account.address);
+    });
+
+    console.log("New accounts:", newAccounts.length);
+    console.log(newAccounts);
+
+    const mergedAccounts = [...accounts, ...newAccounts];
+    console.log("Merged accounts:", mergedAccounts.length);
+    console.log(mergedAccounts);
   }
 
   useEffect(() => {
