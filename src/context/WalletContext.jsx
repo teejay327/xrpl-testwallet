@@ -92,9 +92,20 @@ const WalletProvider = ({ children }) => {
     URL.revokeObjectURL(url);
   }
 
+  const importAccounts = (accountsToImport) => {
+    setAccounts((currentAccounts) => {
+      const existingAddresses = currentAccounts.map((account) => account.address);
+
+      const newAccounts = accountsToImport.filter((account) => {
+        return !existingAddresses.includes(account.address);
+      });
+      return [...currentAccounts, ...newAccounts];
+    });
+  };
+
   return (
     <WalletContext.Provider
-      value={{ accounts, activeAccount, activeId, addAccount, removeAccount, selectAccount, renameAccount, exportAccounts }}
+      value={{ accounts, activeAccount, activeId, addAccount, removeAccount, selectAccount, renameAccount, exportAccounts, importAccounts }}
     >
       {children}
     </WalletContext.Provider>
