@@ -10,7 +10,7 @@ import { isValidClassicAddress, Wallet  } from "xrpl";
 const short = (s) => (s ? `${s.slice(0,6)}...${s.slice(-6)}` : "");
 
 const Accounts = () => {
-const {accounts, activeId, selectAccount, addAccount, removeAccount, renameAccount, exportAccounts } = useWallet();
+const {accounts, activeId, selectAccount, addAccount, removeAccount, renameAccount, exportAccounts, importAccounts } = useWallet();
 const [label, setLabel] = useState("");
 const [address, setAddress] = useState("");
 const [seed,setSeed] = useState("");
@@ -178,6 +178,9 @@ const onImport = () => {
 
     console.log("New accounts:", newAccounts.length);
     console.log(newAccounts);
+
+    importAccounts(newAccounts);
+    console.log(("Imported", newAccounts.length, "new accounts"));
 
     const mergedAccounts = [...accounts, ...newAccounts];
     console.log("Merged accounts:", mergedAccounts.length);
