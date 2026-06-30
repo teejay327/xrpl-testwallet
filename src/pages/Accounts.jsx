@@ -180,7 +180,7 @@ const onImport = () => {
     console.log(newAccounts);
 
     importAccounts(newAccounts);
-    console.log(("Imported", newAccounts.length, "new accounts"));
+    console.log("Imported:", newAccounts.length, "new accounts");
 
     const mergedAccounts = [...accounts, ...newAccounts];
     console.log("Merged accounts:", mergedAccounts.length);
