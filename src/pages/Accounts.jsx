@@ -154,7 +154,6 @@ const onImport = () => {
     const text = await file.text();
     
     const importedAccounts = JSON.parse(text);
-    console.log("Imported accounts:", importedAccounts);
     
     if (!Array.isArray(importedAccounts)) {
       console.error("Imported backup is not an array");
@@ -168,7 +167,6 @@ const onImport = () => {
     });
 
     console.log("Valid accounts:", validAccounts.length);
-    console.log(validAccounts);
 
     const existingAddresses = accounts.map((account) => account.address);
 
@@ -177,14 +175,12 @@ const onImport = () => {
     });
 
     console.log("New accounts:", newAccounts.length);
-    console.log(newAccounts);
 
     importAccounts(newAccounts);
     console.log("Imported:", newAccounts.length, "new accounts");
 
     const mergedAccounts = [...accounts, ...newAccounts];
     console.log("Merged accounts:", mergedAccounts.length);
-    console.log(mergedAccounts);
   }
 
   useEffect(() => {

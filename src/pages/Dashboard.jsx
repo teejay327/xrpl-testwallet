@@ -109,6 +109,8 @@ const Dashboard = () => {
 
       const data = await getTransactions(activeAccount.address);
       setTxs(data);
+      console.log("Transactions");
+      console.log(data);
 
       setDestination("");
       setAmount("");
