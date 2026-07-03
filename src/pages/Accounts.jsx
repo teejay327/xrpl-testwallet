@@ -264,7 +264,7 @@ const onImport = () => {
             <Input 
               value={address} 
               onChange={(e) => setAddress(e.target.value)} 
-              placeholder="r12345678..."
+              placeholder="r1234567..."
               onKeyDown={onKeyDown}
             />
           </div>
