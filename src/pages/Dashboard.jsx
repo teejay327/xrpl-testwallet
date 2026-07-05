@@ -204,6 +204,10 @@ const Dashboard = () => {
     return true;
   });
 
+  const isSent = getTransactions.type === "sent";
+  const amountClass = isSent ? "text-red-400" : "text-emerald-400";
+  const amountPrefix = isSent ? "-" : "+";
+
   return (
     <div className="grid gap-6">
       <Card>
