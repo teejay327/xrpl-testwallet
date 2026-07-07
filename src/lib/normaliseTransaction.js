@@ -29,7 +29,8 @@ const normaliseTransaction = (rawTx, activeAddress) => {
     direction: incoming ? "Received" : "Sent",
     amount,
     counterparty: incoming ? tx.Account : tx.Destination,
-    timestamp: rawTx?.close_time_iso || null
+    timestamp: rawTx?.close_time_iso || null,
+    validated: rawTx?.validated === true || tx?.validated === true
   };
 };
 

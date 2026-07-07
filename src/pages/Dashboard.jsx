@@ -439,8 +439,13 @@ const Dashboard = () => {
                         </div>
 
                         {tx.timestamp && (
-                          <div className="mt-1 text-[10px] text-slate-500">
+                          <div className="mt-1 text-xs text-slate-500">
                             {timeAgo(tx.timestamp)}
+                            {tx.validated && (
+                              <span className="ml-1.5 font-medium text-emerald-400">
+                                ✓ Validated
+                              </span>
+                            )}
                           </div>
                         )}
 
