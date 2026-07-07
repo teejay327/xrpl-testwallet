@@ -204,9 +204,12 @@ const Dashboard = () => {
     return true;
   });
 
-  const isSent = getTransactions.type === "sent";
-  const amountClass = isSent ? "text-red-400" : "text-emerald-400";
-  const amountPrefix = isSent ? "-" : "+";
+  // const isSent = getTransactions.type === "sent";
+  // const amountClass = isSent ? "text-red-400" : "text-emerald-400";
+  // const amountPrefix = isSent ? "-" : "+";
+
+  // const amountClass = tx.incoming ? "text-emerald-400" : "text-rose-400";
+  // const amountPrefix = tx.incoming ? "+" : "-";
 
   return (
     <div className="grid gap-6">
@@ -418,7 +421,11 @@ const Dashboard = () => {
 
                 {!loadingTx && filteredTxs.length > 0 && (
                   <div className="space-y-2">
-                    {filteredTxs.map((tx,i) => (
+                    {filteredTxs.map((tx,i) => {
+                        const amountClass = tx.incoming ? "text-emerald-400" : "text-rose-400";
+                        const amountPrefix = tx.incoming ? "+" : "-";
+
+                    return (
                       <div
                         key={tx.hash || i}
                         className="rounded-md border border-slate-800 bg-slate-900/50 p-3 text-xs"
@@ -431,7 +438,12 @@ const Dashboard = () => {
                           >
                             {tx.incoming ? "↑ Received" : "↓ Sent"}
                           </span>
-                          <span>{tx.amount.toFixed(2)} XRP</span>
+                          
+                          <div className={`text-base font-bold tracking-tight ${amountClass}`}>
+                            {amountPrefix}
+                            {tx.amount.toFixed(2)} XRP
+                          </div>
+                          
                         </div>
 
                         <div className="mt-1 break-all text-slate-300">
@@ -460,7 +472,8 @@ const Dashboard = () => {
                             </a>                                         
                         )}                        
                       </div>
-                    ))}
+                    );
+                  })}
                   </div>
                 )}
 
