@@ -344,29 +344,29 @@ const Dashboard = () => {
               </div>
 
               <div className="mb-4 rounded-md border border-slate-800 bg-slate-900/40 p-3">
-                <div className="mb-2 text-xs font-medium text-slte-400">
+                <div className="mb-2 text-xs font-medium text-slate-300">
                   Summary
                 </div>
 
                 <div className="space-y-1  text-xs">
                   <div className="flex justify-between">
-                    <span className="text-slate-400">Sent</span>
-                    <span className="text-slate-400">
+                    <span className="font-medium text-slate-300">Sent</span>
+                    <span className="text-slate-300">
                       {totalSent.toFixed(2)} XRP
                     </span>
                   </div>
 
                   <div className="space-y-1 text-xs">
                     <div className="flex justify-between">
-                      <span className="text-slate-400">Received</span>
-                      <span className="text-slate-400">
+                      <span className="text-slate-300">Received</span>
+                      <span className="font-medium text-slate-300">
                         {totalReceived.toFixed(2)} XRP
                       </span>
                     </div>
                   </div>
 
                   <div className="flex justify-between border-t border-slate-800 pt-1">
-                    <span className="text-slate-400">Net amount for this wallet</span>
+                    <span className="text-slate-300">Net amount for this wallet</span>
                     <span className={netAmount >= 0 ? "text-emerald-400" : "text-sky-400"}>
                       {netAmount.toFixed(2)} XRP
                     </span>
@@ -431,19 +431,20 @@ const Dashboard = () => {
                         className="rounded-md border border-slate-800 bg-slate-900/50 p-3 text-xs"
                       >
                         <div className="flex justify-between">
-                          <span
-                            className={
-                              tx.incoming ? "text-emerald-400" : "text-sky-400"
-                            }
-                          >
+                          <span className="font-medium text-slate-400">
                             {tx.incoming ? "↑ Received" : "↓ Sent"}
                           </span>
                           
-                          <div className={`text-base font-bold tracking-tight ${amountClass}`}>
-                            {amountPrefix}
-                            {tx.amount.toFixed(2)} XRP
+                          <div className={amountClass}>
+                            <span className="text-base font-bold tracking-tight">
+                              {amountPrefix}
+                              {tx.amount.toFixed(2)}
+                            </span>
+                            <span className="ml-1 text-xs font-medium uppercase text-slate-400">
+                            XRP
+                            </span>
                           </div>
-                          
+          
                         </div>
 
                         <div className="mt-1 break-all text-slate-300">
