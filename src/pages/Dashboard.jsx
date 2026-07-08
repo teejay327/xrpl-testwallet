@@ -13,7 +13,7 @@ import timeAgo from "../lib/timeAgo.js";
 const short = s => (s ? `${s.slice(0, 6)}...${s.slice(-6)}` : "");
 
 const Dashboard = () => {
-  const { activeAccount } = useWallet();
+  const { activeAccount, accounts } = useWallet();
 
   const [balance,setBalance] = useState(null);
   const [loading,setLoading] = useState(false);
@@ -204,12 +204,11 @@ const Dashboard = () => {
     return true;
   });
 
-  // const isSent = getTransactions.type === "sent";
-  // const amountClass = isSent ? "text-red-400" : "text-emerald-400";
-  // const amountPrefix = isSent ? "-" : "+";
+  const getAccountLabel = (address) => {
+    const account = accounts.find((account => account.address === address));
+    return account?.label || null;
+  };
 
-  // const amountClass = tx.incoming ? "text-emerald-400" : "text-rose-400";
-  // const amountPrefix = tx.incoming ? "+" : "-";
 
   return (
     <div className="grid gap-6">
@@ -424,6 +423,7 @@ const Dashboard = () => {
                     {filteredTxs.map((tx,i) => {
                         const amountClass = tx.incoming ? "text-emerald-400" : "text-rose-400";
                         const amountPrefix = tx.incoming ? "+" : "-";
+                        const counterpartyLabel = getAccountLabel(tx.counterparty);
 
                     return (
                       <div
@@ -448,7 +448,21 @@ const Dashboard = () => {
                         </div>
 
                         <div className="mt-1 break-all text-slate-300">
-                            {tx.counterparty}
+                            {counterpartyLabel ? (
+                              <>
+                                <div className="font-medium text-slate-200">
+                                  {counterpartyLabel}
+                                </div>
+
+                                <div className="break-all text-[12px] text-slate-400">
+                                  {short(tx.counterparty)}
+                                </div>
+                              </>
+                            ) : (
+                              <div>
+                                {tx.counterparty}
+                              </div>
+                            )}
                         </div>
 
                         {tx.timestamp && (
