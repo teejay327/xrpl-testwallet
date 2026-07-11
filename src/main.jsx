@@ -9,6 +9,7 @@ import AppShell from "./components/AppShell.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Accounts from "./pages/Accounts.jsx";
 import WalletProvider from './context/WalletContext.jsx';
+import { LockProvider } from './context/LockContext.jsx';
 
 const router = createBrowserRouter([
   {
@@ -23,8 +24,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <WalletProvider>
-      <RouterProvider router={router}/>
-    </WalletProvider>
+    <LockProvider>
+      <WalletProvider>
+        <RouterProvider router={router}/>
+      </WalletProvider>
+    </LockProvider>
   </React.StrictMode>
 )
