@@ -4,6 +4,9 @@ const LockContext = createContext(null);
 
 const LockProvider = ({ children }) => {
   const [isLocked, setIsLocked] = useState(false);
+  const [hasPassword, setHasPassword] = useState(
+    localStorage.getItem("walletHasPassword") === true
+  );
 
   const lockWallet = () => {
     setIsLocked(true);
@@ -17,6 +20,7 @@ const LockProvider = ({ children }) => {
     <LockContext.Provider
       value = {{
         isLocked,
+        hasPassword,
         lockWallet,
         unlockWallet
       }}
