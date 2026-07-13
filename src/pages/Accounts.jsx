@@ -6,6 +6,7 @@ import Input from "../components/ui/Input.jsx";
 import Label from "../components/ui/Label.jsx";
 import { getBalance } from "../xrpl/client.js";
 import { isValidClassicAddress, Wallet  } from "xrpl";
+import { useLock } from "../context/LockContext.jsx";
 
 const short = (s) => (s ? `${s.slice(0,6)}...${s.slice(-6)}` : "");
 
@@ -21,6 +22,7 @@ const [copiedAddressId, setCopiedAddressId] = useState(null);
 const [balances,setBalances] = useState({});
 const [loadingBalances,setLoadingBalances] = useState(false);
 const fileInputRef = useRef(null);
+const { hasPassWord } = useLock();
 
 const trimmedAddress = address.trim();
 const trimmedSeed = seed.trim();
@@ -36,7 +38,23 @@ const onClear = () => {
   setError("");
 }
 
+const addAccountWithLockCheck = (account) => {
+  const isFirstAccount = accounts.length === 0 && !hasPassWord;
+
+  if (isFirstAccount) {
+    console.log("First account detected - password setup required");
+  }
+
+  addAccount(account);
+}
+
 const onAdd = () => {
+  const accountToAdd = {
+    id: crypto.randomUUID(),
+    label: trimmedLabel || "Watch Account",
+    address: trimmedAddress
+  };
+
   if (!isValidClassicAddress(trimmedAddress)) {
     setError("Invalid XRPL address - it must be at least 25 characters starting with r");
     return;
@@ -44,24 +62,22 @@ const onAdd = () => {
 
 setError("");
 
-  addAccount({
-    id: crypto.randomUUID(),
-    label: trimmedLabel || "Watch Account",
-    address: trimmedAddress
-  });
+  addAccountWithLockCheck(accountToAdd);
 
   onClear();
 };
 
 const onGenerate = () => {
-  const wallet = Wallet.generate();
-
-  addAccount({
+  const accountToAdd = {
     id: crypto.randomUUID(),
     label: trimmedLabel || `Testnet Wallet ${accounts.length + 1}`,
     address: wallet.address,
     seed: wallet.seed
-  });
+  }
+  
+  const wallet = Wallet.generate();
+
+  addAccountWithLockCheck(accountToAdd);
 
   onClear();
 }
@@ -79,7 +95,7 @@ const onImport = () => {
     }
 
     setError("");
-    addAccount(accountToAdd);
+    addAccountWithLockcheck(accountToAdd);
     onClear();
   } catch(err) {
     console.error("IMPORT ERROR", err);
