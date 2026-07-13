@@ -2,6 +2,8 @@ import { createContext, useContext, useState } from 'react';
 
 const LockContext = createContext(null);
 
+
+
 const LockProvider = ({ children }) => {
   const [isLocked, setIsLocked] = useState(false);
   const [hasPassword, setHasPassword] = useState(
@@ -16,11 +18,21 @@ const LockProvider = ({ children }) => {
     setIsLocked(false);
   };
 
+  const createPassword = () => {
+
+  };
+
+  const verifyPassword = () => {
+
+  };
+
   return (
     <LockContext.Provider
       value = {{
         isLocked,
         hasPassword,
+        createPassword,
+        verifyPassword,
         lockWallet,
         unlockWallet
       }}
