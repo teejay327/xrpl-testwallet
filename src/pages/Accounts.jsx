@@ -21,6 +21,9 @@ const [copiedId, setCopiedId] = useState(null);
 const [copiedAddressId, setCopiedAddressId] = useState(null);
 const [balances,setBalances] = useState({});
 const [loadingBalances,setLoadingBalances] = useState(false);
+const [pendingAccount, setPendingAccount] = useState(null);
+const [showPasswordSetup, setShowPasswordSetup] = useState(false);
+
 const fileInputRef = useRef(null);
 const { hasPassWord } = useLock();
 
@@ -43,12 +46,16 @@ const addAccountWithLockCheck = (account) => {
 
   if (isFirstAccount) {
     console.log("First account detected - password setup required");
+    setPendingAccount(account);
+    setShowPasswordSetup(true);
+    return;
   }
 
   addAccount(account);
 }
 
 const onAdd = () => {
+
   const accountToAdd = {
     id: crypto.randomUUID(),
     label: trimmedLabel || "Watch Account",
@@ -68,14 +75,15 @@ setError("");
 };
 
 const onGenerate = () => {
+    
+  const wallet = Wallet.generate();
+  
   const accountToAdd = {
     id: crypto.randomUUID(),
     label: trimmedLabel || `Testnet Wallet ${accounts.length + 1}`,
     address: wallet.address,
     seed: wallet.seed
   }
-  
-  const wallet = Wallet.generate();
 
   addAccountWithLockCheck(accountToAdd);
 
@@ -95,7 +103,7 @@ const onImport = () => {
     }
 
     setError("");
-    addAccountWithLockcheck(accountToAdd);
+    addAccountWithLockCheck(accountToAdd);
     onClear();
   } catch(err) {
     console.error("IMPORT ERROR", err);
