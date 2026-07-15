@@ -313,7 +313,21 @@ const onImport = () => {
               {error}
             </div>
           )}
+
+          {showPasswordSetup && (
+            <div className="rounded-md border border-amber-500 bg-amber-950/30 p-4">
+              <div className="font-semibold text-amber-300">
+                Protect your wallet
+              </div>
+
+              <div classNAme="mt-2 text-sm text-slate-300">
+                Create a password before adding your first wallet
+              </div>
+            </div>
+          )}
         </CardContent>
+
+
 
         <CardFooter className="flex flex-wrap gap-3">
           <Button onClick={onAdd} disabled={!canAdd}>
