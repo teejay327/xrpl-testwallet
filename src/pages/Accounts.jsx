@@ -23,9 +23,11 @@ const [balances,setBalances] = useState({});
 const [loadingBalances,setLoadingBalances] = useState(false);
 const [pendingAccount, setPendingAccount] = useState(null);
 const [showPasswordSetup, setShowPasswordSetup] = useState(false);
+const [password, setPassword] = useState();
+const [confirmPassword, setConfirmPassword] = useState("");
 
 const fileInputRef = useRef(null);
-const { hasPassWord } = useLock();
+const { hasPassword } = useLock();
 
 const trimmedAddress = address.trim();
 const trimmedSeed = seed.trim();
@@ -42,7 +44,7 @@ const onClear = () => {
 }
 
 const addAccountWithLockCheck = (account) => {
-  const isFirstAccount = accounts.length === 0 && !hasPassWord;
+  const isFirstAccount = accounts.length === 0 && !hasPassword;
 
   if (isFirstAccount) {
     console.log("First account detected - password setup required");
@@ -317,11 +319,33 @@ const onImport = () => {
           {showPasswordSetup && (
             <div className="rounded-md border border-amber-500 bg-amber-950/30 p-4">
               <div className="font-semibold text-amber-300">
-                Protect your wallet
+                Protect your wallet!
               </div>
 
               <div classNAme="mt-2 text-sm text-slate-300">
-                Create a password before adding your first wallet
+                Create a password before adding your first wallet!
+              </div>
+
+              <div className="mt-4 grid gap-3">
+                <div className="grid gap-1">
+                  <Label>Password</Label>
+                  <Input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="At least 8 characters"
+                  />
+                </div>
+
+                <div className="grid gap-1">
+                  <Label>Confirm password</Label>
+                  <Input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Enter the password again"
+                  />
+                </div>
               </div>
             </div>
           )}
