@@ -25,9 +25,10 @@ const [pendingAccount, setPendingAccount] = useState(null);
 const [showPasswordSetup, setShowPasswordSetup] = useState(false);
 const [password, setPassword] = useState();
 const [confirmPassword, setConfirmPassword] = useState("");
+const [creatingPassword, setCreatingPassword] = useState(false);
 
 const fileInputRef = useRef(null);
-const { hasPassword } = useLock();
+const { hasPassword, createPassword } = useLock();
 
 const trimmedAddress = address.trim();
 const trimmedSeed = seed.trim();
@@ -254,8 +255,6 @@ const onImport = () => {
     loadBalances();
   }, [accounts]);
 
-  
-
   const sortedAccounts = [...accounts].sort((a,b) => {
     if (a.id === activeId) return -1;
     if (b.id === activeId) return 1;
@@ -264,7 +263,41 @@ const onImport = () => {
 
   const totalAccounts = accounts.length;
   const signingAccounts = accounts.filter((a) => a.seed).length;
-  const watchOnlyAccounts = accounts.filter((a) => !a.seed).length
+  const watchOnlyAccounts = accounts.filter((a) => !a.seed).length;
+
+  const handleCreatePassword = async() => {
+    if (!pendingAccount) {
+      setError("No pending account found");
+      return;
+    }
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    try {
+      setCreatingPassword(true);
+      setError("");
+
+      await createPassword(password);
+      addAccount(pendingAccount);
+
+      setPendingAccount(null);
+      setShowPasswordSetup(false);
+      setPassword("");
+      setConfirmPassword("");
+    } catch(err) {
+      setError(err?.message || "Unable tocreate password");
+    } finally {
+      setCreatingPassword(false);
+    }
+  }
 
   return (
     <div className="grid gap-6">
@@ -322,7 +355,7 @@ const onImport = () => {
                 Protect your wallet!
               </div>
 
-              <div classNAme="mt-2 text-sm text-slate-300">
+              <div className="mt-2 text-sm text-slate-300">
                 Create a password before adding your first wallet!
               </div>
 
