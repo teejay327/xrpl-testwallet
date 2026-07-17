@@ -23,7 +23,7 @@ const [balances,setBalances] = useState({});
 const [loadingBalances,setLoadingBalances] = useState(false);
 const [pendingAccount, setPendingAccount] = useState(null);
 const [showPasswordSetup, setShowPasswordSetup] = useState(false);
-const [password, setPassword] = useState();
+const [password, setPassword] = useState("");
 const [confirmPassword, setConfirmPassword] = useState("");
 const [creatingPassword, setCreatingPassword] = useState(false);
 
@@ -379,6 +379,14 @@ const onImport = () => {
                     placeholder="Enter the password again"
                   />
                 </div>
+
+                <Button
+                  type="button"
+                  onClick={handleCreatePassword}
+                  disabled={creatingPassword}
+                >
+                  {creatingPassword ? "Creating password ..." : "Create password"}
+                </Button>
               </div>
             </div>
           )}
