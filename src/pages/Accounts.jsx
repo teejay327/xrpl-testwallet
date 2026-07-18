@@ -293,7 +293,7 @@ const onImport = () => {
       setPassword("");
       setConfirmPassword("");
     } catch(err) {
-      setError(err?.message || "Unable tocreate password");
+      setError(err?.message || "Unable to create password");
     } finally {
       setCreatingPassword(false);
     }
