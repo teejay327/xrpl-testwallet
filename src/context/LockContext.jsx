@@ -38,7 +38,7 @@ const derivePasswordHash = async(password, salt) => {
 }
 
 const LockProvider = ({ children }) => {
-  const [isLocked, setIsLocked] = useState(false);
+  const [isLocked, setIsLocked] = useState(true);
   const [hasPassword, setHasPassword] = useState(
     localStorage.getItem(STORAGE_KEYS.hasPassword) === "true"
   );

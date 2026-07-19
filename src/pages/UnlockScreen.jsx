@@ -1,4 +1,14 @@
+import { useState } from "react";
+import { useLock } from "../context/LockContext.jsx";
+import Button from "../components/ui/Button.jsx";
+import Input from "../components/ui/Input.jsx"
+
 const UnlockScreen = () => {
+  const { verifyPassword, unlockWallet } = useLock();
+
+  const [ password, setPassword ] = useState("");
+  const [ error, setError ] = useState("");
+  const [ isUnlocking, setIsUnlocking ] = useState(false);
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
@@ -10,6 +20,19 @@ const UnlockScreen = () => {
         <p className="mt-2 text-sm text-slate-400">
           Enter the password to unlock your wallet
         </p>
+
+        <div className="mt-5">
+          <Input 
+            type="password"
+            value={ password }
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="Enter your password"
+          />
+        </div>
+
+        <Button className="mt-4 w-full">
+          Unlock wallet
+        </Button>
       </div>
     </div>
   )
