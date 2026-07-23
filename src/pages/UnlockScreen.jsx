@@ -26,7 +26,7 @@ const UnlockScreen = () => {
             type="password"
             value={ password }
             onChange={(event) => setPassword(event.target.value)}
-            placeholder="Please enter your password"
+            placeholder="Enter your password"
           />
         </div>
 
