@@ -286,7 +286,9 @@ const onImport = () => {
       setError("");
 
       await createPassword(password);
-      addAccount(pendingAccount);
+      if (pendingAccount) {
+        addAccount(pendingAccount);
+      }
 
       setPendingAccount(null);
       setShowPasswordSetup(false);
@@ -347,6 +349,12 @@ const onImport = () => {
             <div className="text-sm text-rose-400">
               {error}
             </div>
+          )}
+
+          {!hasPassword && !showPasswordSetup && (
+            <Button onClick={() => setShowPasswordSetup(true)}>
+              Create temporary wallet password
+            </Button>
           )}
 
           {showPasswordSetup && (
