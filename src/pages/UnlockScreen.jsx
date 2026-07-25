@@ -10,6 +10,24 @@ const UnlockScreen = () => {
   const [ error, setError ] = useState("");
   const [ isUnlocking, setIsUnlocking ] = useState(false);
 
+  const handleUnlock = async() => {
+    setError("");
+    setIsUnlocking(true);
+
+    try {
+      const isValid = await verifyPassword(password);
+
+      if (!isValid) {
+        setError("Incorrect password");
+        return;
+      }
+
+      unlockWallet();
+    } finally {
+      setIsUnlocking(false);
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
       <div className="w-full max-w-md rounded-lg border border-slate-800 bg-slate-900 p-6">
@@ -30,8 +48,12 @@ const UnlockScreen = () => {
           />
         </div>
 
-        <Button className="mt-4 w-full">
-          Unlock wallet
+        <Button 
+          className="mt-4 w-full"
+          disabled={isUnlocking}
+          onClick={handleUnlock}
+        >
+          {isUnlocking ? "Unlocking ..." : "Unlock wallet"}
         </Button>
       </div>
     </div>
