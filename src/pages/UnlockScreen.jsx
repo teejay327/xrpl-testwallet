@@ -19,12 +19,16 @@ const UnlockScreen = () => {
 
       if (!isValid) {
         setError("Incorrect password");
+        setPassword("");
         return;
       }
 
       unlockWallet();
+    } catch(error) {
+      console.error("Unlock failed", error);
+      setError("Unable to unlock wallet");
     } finally {
-      setIsUnlocking(false);
+      setIsUnlocking(false);    
     }
   };
 
@@ -47,6 +51,12 @@ const UnlockScreen = () => {
             placeholder="Enter your password"
           />
         </div>
+
+        {error && (
+          <p className="mt-2 text-sm text-red-400">
+            {error}
+          </p>
+        )}
 
         <Button 
           className="mt-4 w-full"

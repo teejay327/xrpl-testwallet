@@ -12,6 +12,15 @@ const bytesToBase64 = (bytes) => {
   return btoa(String.fromCharCode(...bytes));
 };
 
+const base64ToBytes = (base64) => {
+  const binaryString = atob(base64);
+
+  return Uint8Array.from(
+    binaryString,
+    (character) => character.charCodeAt(0)
+  );
+};
+
 const derivePasswordHash = async(password, salt) => {
   const encoder = new TextEncoder();
 
@@ -68,8 +77,18 @@ const LockProvider = ({ children }) => {
 
   };
 
-  const verifyPassword = () => {
+  const verifyPassword = async(password) => {
+    const storedSalt = localStorage.getItem(STORAGE_KEYS.passwordSalt);
+    const storedHash = localStorage.getItem(STORAGE_KEYS.passwordHash);
 
+    if (!storedSalt || !storedHash) {
+      return false;
+    }
+
+    const saltBytes = base64ToBytes(storedSalt);
+    const passwordHash = await derivePasswordHash(password, saltBytes);
+
+    return passwordHash === storedHash;
   };
 
   return (

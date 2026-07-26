@@ -266,10 +266,7 @@ const onImport = () => {
   const watchOnlyAccounts = accounts.filter((a) => !a.seed).length;
 
   const handleCreatePassword = async() => {
-    if (!pendingAccount) {
-      setError("No pending account found");
-      return;
-    }
+      setError("");
 
     if (password.length < 8) {
       setError("Password must be at least 8 characters");
@@ -281,11 +278,11 @@ const onImport = () => {
       return;
     }
 
-    try {
-      setCreatingPassword(true);
-      setError("");
+    setCreatingPassword(true);
 
+    try {
       await createPassword(password);
+
       if (pendingAccount) {
         addAccount(pendingAccount);
       }
