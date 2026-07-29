@@ -312,7 +312,7 @@ const onImport = () => {
             <Input 
               value={label} 
               onChange={(e) => setLabel(e.target.value)} 
-              placeholder="First name Family Name"
+              placeholder="First name Family name"
               onKeyDown={onKeyDown}
             />
           </div>
