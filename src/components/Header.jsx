@@ -74,11 +74,12 @@ const Header = () => {
         )}
       </div>
 
-      <div>
-        <Button onClick={lockWallet}>
-          🔒 Lock Wallet
-        </Button>
-      </div>
+      <Button 
+        onClick={lockWallet}
+        className="ml-2"
+      >
+        🔒 Lock Wallet
+      </Button>
     </header>
   );
 }
