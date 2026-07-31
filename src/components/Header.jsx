@@ -2,6 +2,8 @@ import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWallet } from "@fortawesome/free-solid-svg-icons";
 import { useWallet } from "../context/WalletContext";
+import { useLock } from "../context/LockContext";
+import Button from "../components/ui/Button.jsx";
 
 const linkBase = "text-sm font-semibold text-slate-300 transition";
 const linkActive = "text-emerald-400";
@@ -10,6 +12,8 @@ const short = (s) => (s ? `${s.slice(0,6)}...${s.slice(-6)}` : "");
 
 const Header = () => {
   const { activeAccount } = useWallet();
+
+  const { lockWallet } = useLock();
 
   return (
     <header className="mb-8 flex items-start justify-between">
@@ -68,6 +72,12 @@ const Header = () => {
             </div>
           </>
         )}
+      </div>
+
+      <div>
+        <Button onClick={lockWallet}>
+          🔒 Lock Wallet
+        </Button>
       </div>
     </header>
   );
