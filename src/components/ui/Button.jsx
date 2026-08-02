@@ -1,8 +1,8 @@
 import cn from "./cn";
 
 const base = 
-  "inline-flex items-center justify-center rounded-md font-semibold transition" +
-  "focus:outline-none focus:ring-2 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-slate-950" +
+  "inline-flex items-center justify-center rounded-md font-semibold transition " +
+  "focus:outline-none focus:ring-2 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-slate-950 " +
   "disabled:opacity-50 disabled:pointer-events-none"
 
 const variants = {

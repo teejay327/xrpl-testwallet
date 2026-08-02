@@ -77,18 +77,25 @@ const UnlockScreen = () => {
         </div>
 
         {error && (
-          <p className="mt-2 text-sm text-red-400">
+          <p 
+            className="mt-2 text-sm text-red-400"
+            role="alert"
+          >
             {error}
           </p>
         )}
 
         <Button 
-          className="mt-4 w-full"
-          disabled={isUnlocking}
+          className="mt-5 w-full"
+          disabled={!password || isUnlocking}
           onClick={handleUnlock}
         >
           {isUnlocking ? "Unlocking ..." : "Unlock wallet"}
         </Button>
+
+        <p className="mt-4 text-center text-xs text-slate-500">
+          Your password is checked locally and never stored in plain text
+        </p>
     </div>
   )
 }
