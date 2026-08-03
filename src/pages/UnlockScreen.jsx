@@ -47,7 +47,7 @@ const UnlockScreen = () => {
           </h1>
 
           <p className="mt-1 text-sm text-slate-400">
-            Enter the password to unlock your wallet
+            Enter password to unlock your wallet
           </p>
         </div>
       </div>
