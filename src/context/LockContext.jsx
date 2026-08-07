@@ -8,7 +8,7 @@ const STORAGE_KEYS = {
   passwordHash: "walletPasswordHash"
 };
 
-const AUTO_LOCK_MS = 10 * 1000;
+const AUTO_LOCK_MS = 5 * 60 * 1000;
 
 const bytesToBase64 = (bytes) => {
   return btoa(String.fromCharCode(...bytes));
@@ -100,14 +100,31 @@ const LockProvider = ({ children }) => {
       return;
     }
 
-    const timer = setTimeout(() => {
-      lockWallet();
-    }, AUTO_LOCK_MS);
+    let timer;
+
+    const resetTimer = () => {
+      clearTimeout(timer);
+    
+      timer = setTimeout(() => {
+        lockWallet();
+      }, AUTO_LOCK_MS);
+    };
+
+    resetTimer() ;
+
+    window.addEventListener("mousemove", resetTimer);
+    window.addEventListener("keydown", resetTimer);
+    window.addEventListener("click", resetTimer);
+    window.addEventListener("touchStart", resetTimer);
 
     return() => {
       clearTimeout(timer);
-    }
 
+      window.removeEventListener("mousemove", resetTimer);
+      window.removeEventListener("keydown", resetTimer);
+      window.removeEventListener("click", resetTimer);
+      window.removeEventListener("touchStart", resetTimer);
+    };
   }, [isLocked]);
 
   return (
