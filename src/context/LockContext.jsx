@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const LockContext = createContext(null);
 
@@ -7,6 +7,8 @@ const STORAGE_KEYS = {
   passwordSalt: "walletPasswordSalt",
   passwordHash: "walletPasswordHash"
 };
+
+const AUTO_LOCK_MS = 10 * 1000;
 
 const bytesToBase64 = (bytes) => {
   return btoa(String.fromCharCode(...bytes));
@@ -92,6 +94,21 @@ const LockProvider = ({ children }) => {
 
     return passwordHash === storedHash;
   };
+
+  useEffect(() => {
+    if (isLocked) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      lockWallet();
+    }, AUTO_LOCK_MS);
+
+    return() => {
+      clearTimeout(timer);
+    }
+
+  }, [isLocked]);
 
   return (
     <LockContext.Provider
