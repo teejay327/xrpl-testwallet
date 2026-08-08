@@ -73,17 +73,20 @@ const Header = () => {
           </>
         )}
       </div>
-
-      <Button 
-        onClick={lockWallet}
-        className="ml-2"
-      >
-        🔒 Lock Wallet
-      </Button>
+     
+      <div className="flex flex-col items-center gap-1">
+        <Button 
+          onClick={lockWallet}
+          className="ml-2"
+        >
+          🔒 Lock Wallet
+        </Button>
+        <span className="hidden whitespace-nowrap text-xs text-slate-500 sm:inline ml-1">
+          Auto locks after 5 min inactivity
+        </span>
+      </div>
     </header>
   );
 }
 
 export default Header;
-
-

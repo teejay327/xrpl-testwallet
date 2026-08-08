@@ -8,6 +8,7 @@ const STORAGE_KEYS = {
   passwordHash: "walletPasswordHash"
 };
 
+// Lock the wallet after 5 minutes of inactivity
 const AUTO_LOCK_MS = 5 * 60 * 1000;
 
 const bytesToBase64 = (bytes) => {
