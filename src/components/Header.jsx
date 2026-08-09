@@ -82,7 +82,7 @@ const Header = () => {
           🔒 Lock Wallet
         </Button>
         <span className="hidden whitespace-nowrap text-xs text-slate-500 sm:inline ml-1">
-          Auto locks after 5 min inactivity
+          Auto locks after 5 min of inactivity
         </span>
       </div>
     </header>
