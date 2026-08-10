@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { bytesToBase64, base64ToBytes } from '../utils/crypto.js';
 
 const LockContext = createContext(null);
 
@@ -11,18 +12,7 @@ const STORAGE_KEYS = {
 // Lock the wallet after 5 minutes of inactivity
 const AUTO_LOCK_MS = 5 * 60 * 1000;
 
-const bytesToBase64 = (bytes) => {
-  return btoa(String.fromCharCode(...bytes));
-};
 
-const base64ToBytes = (base64) => {
-  const binaryString = atob(base64);
-
-  return Uint8Array.from(
-    binaryString,
-    (character) => character.charCodeAt(0)
-  );
-};
 
 const derivePasswordHash = async(password, salt) => {
   const encoder = new TextEncoder();

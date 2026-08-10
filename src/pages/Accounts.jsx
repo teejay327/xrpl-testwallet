@@ -97,7 +97,6 @@ const onImport = () => {
   try {
     const wallet = Wallet.fromSeed(trimmedSeed);
 
-
     const accountToAdd = {
       id: crypto.randomUUID(),
       label: trimmedLabel || `Imported Wallet ${accounts.length + 1}`,
