@@ -18,7 +18,7 @@ const encryptSeed = async(seed, key) => {
 const deriveEncryptionKey = async(password) => {
   const encoder = new TextEncoder();
 
-  const keyMaterial =await crypto.subtle.importKey(
+  const keyMaterial = await crypto.subtle.importKey(
     "raw",
     encoder.encode(password),
     "PBKDF2",
@@ -43,9 +43,28 @@ const deriveEncryptionKey = async(password) => {
   );
 };
 
+const decryptSeed = async(encryptedSeed, key) => {
+  const encryptedBytes = base64ToBytes(encryptedSeed.ciphertext);
+  const iv = base64ToBytes(encryptedSeed.iv);
+
+  const decrypted = await crypto.subtle.decrypt(
+    {
+      name: "AES-GCM",
+      iv
+    },
+    key,
+    encryptedBytes
+  );
+
+  const decryptedSeed = new TextDecoder().decode(decrypted);
+
+  return decryptedSeed;
+};
+
 export {
   bytesToBase64,
   base64ToBytes, 
   encryptSeed,
-  deriveEncryptionKey
+  deriveEncryptionKey,
+  decryptSeed
 };
