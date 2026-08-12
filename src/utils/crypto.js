@@ -15,7 +15,7 @@ const encryptSeed = async(seed, key) => {
   const iv = crypto.getRandomValues(new Uint8Array(12));
 }
 
-const deriveEncryptionKey = async(password) => {
+const deriveEncryptionKey = async(password, salt) => {
   const encoder = new TextEncoder();
 
   const keyMaterial = await crypto.subtle.importKey(

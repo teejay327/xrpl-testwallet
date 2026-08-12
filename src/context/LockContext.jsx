@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { bytesToBase64, base64ToBytes } from '../utils/crypto.js';
+import { bytesToBase64, base64ToBytes, encryptSeed, decryptSeed, deriveEncryptionKey } from '../utils/crypto.js';
 
 const LockContext = createContext(null);
 
@@ -11,8 +11,6 @@ const STORAGE_KEYS = {
 
 // Lock the wallet after 5 minutes of inactivity
 const AUTO_LOCK_MS = 5 * 60 * 1000;
-
-
 
 const derivePasswordHash = async(password, salt) => {
   const encoder = new TextEncoder();
@@ -85,6 +83,23 @@ const LockProvider = ({ children }) => {
 
     return passwordHash === storedHash;
   };
+
+  const testEncryptionRoundTrip = async() => {
+    const password = "AdmiralThongclapper123";
+    const testSecret = "test-secret";
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const key = await deriveEncryptionKey(password, salt);
+    const encrypted = await encryptSeed(testSecret,key);
+    const decrypted = await decryptSeed(encrypted,key);
+
+    console.log("Original:", testSecret);
+    console.log("Encrypted:", encrypted);
+    console.log("Decrypted:", decrypted);
+  }
+
+  useEffect(() => {
+    testEncryptionRoundTrip();
+  },[]);
 
   useEffect(() => {
     if (isLocked) {
