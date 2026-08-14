@@ -13,7 +13,27 @@ const base64ToBytes = (base64) => {
 
 const encryptSeed = async(seed, key) => {
   const iv = crypto.getRandomValues(new Uint8Array(12));
-}
+
+  const seedBytes = new TextEncoder().encode(seed);
+  const encrypted = await crypto.subtle.encrypt(
+    {
+      name: "AES-GCM",
+      iv
+    },
+    key,
+    seedBytes
+  );
+
+  const encryptedBytes = new Uint8Array(encrypted);
+  const ciphertext = bytesToBase64(encryptedBytes);
+
+  const ivBase64 = bytesToBase64(iv);
+
+  return {
+    ciphertext,
+    iv: ivBase64
+  };
+};
 
 const deriveEncryptionKey = async(password, salt) => {
   const encoder = new TextEncoder();
