@@ -63,7 +63,7 @@ const Dashboard = () => {
 
     if (!amount.trim()) {
       setTxType("error");
-      setTxMessage("Please enter amount");
+      setTxMessage("Please enter an amount");
       setTxHash("");
       return;
     }
