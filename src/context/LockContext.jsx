@@ -6,7 +6,8 @@ const LockContext = createContext(null);
 const STORAGE_KEYS = {
   hasPassword: "walletHasPassword",
   passwordSalt: "walletPasswordSalt",
-  passwordHash: "walletPasswordHash"
+  passwordHash: "walletPasswordHash",
+  encryptionSalt: "walletEncryptionSalt"
 };
 
 // Lock the wallet after 5 minutes of inactivity
@@ -60,14 +61,15 @@ const LockProvider = ({ children }) => {
 
     const salt = crypto.getRandomValues(new Uint8Array(16));
     const passwordHash = await derivePasswordHash(password, salt);
+    const encryptionSalt = crypto.getRandomValues(new Uint8Array(16));
 
     localStorage.setItem(STORAGE_KEYS.hasPassword, "true");
     localStorage.setItem(STORAGE_KEYS.passwordSalt, bytesToBase64(salt));
     localStorage.setItem(STORAGE_KEYS.passwordHash, passwordHash);
+    localStorage.setItem(STORAGE_KEYS.encryptionSalt, bytesToBase64(encryptionSalt))
 
     setHasPassword(true);
     setIsLocked(false);
-
   };
 
   const verifyPassword = async(password) => {
