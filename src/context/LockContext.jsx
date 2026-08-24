@@ -56,7 +56,7 @@ const LockProvider = ({ children }) => {
 
   const createPassword = async(password) => {
     if (password.length < 8) {
-      throw new Error("Password must have minimum 8 characters");
+      throw new Error("Password must have at least 8 characters");
     }
 
     const salt = crypto.getRandomValues(new Uint8Array(16));
