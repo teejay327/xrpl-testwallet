@@ -7,6 +7,7 @@ import Label from "../components/ui/Label.jsx";
 import { getBalance } from "../xrpl/client.js";
 import { isValidClassicAddress, Wallet  } from "xrpl";
 import { useLock } from "../context/LockContext.jsx";
+import PasswordSetup from "../components/PasswordSetup.jsx";
 
 const short = (s) => (s ? `${s.slice(0,6)}...${s.slice(-6)}` : "");
 
@@ -23,12 +24,12 @@ const [balances,setBalances] = useState({});
 const [loadingBalances,setLoadingBalances] = useState(false);
 const [pendingAccount, setPendingAccount] = useState(null);
 const [showPasswordSetup, setShowPasswordSetup] = useState(false);
-const [password, setPassword] = useState("");
-const [confirmPassword, setConfirmPassword] = useState("");
-const [creatingPassword, setCreatingPassword] = useState(false);
+// const [password, setPassword] = useState("");
+// const [confirmPassword, setConfirmPassword] = useState("");
+// const [creatingPassword, setCreatingPassword] = useState(false);
 
 const fileInputRef = useRef(null);
-const { hasPassword, createPassword } = useLock();
+const { hasPassword } = useLock();
 
 const trimmedAddress = address.trim();
 const trimmedSeed = seed.trim();
@@ -264,38 +265,38 @@ const onImport = () => {
   const signingAccounts = accounts.filter((a) => a.seed).length;
   const watchOnlyAccounts = accounts.filter((a) => !a.seed).length;
 
-  const handleCreatePassword = async() => {
-      setError("");
+  // const handleCreatePassword = async() => {
+  //     setError("");
 
-    if (password.length < 8) {
-      setError("Password must have at least 8 characters");
-      return;
-    }
+  //   if (password.length < 8) {
+  //     setError("Password must have at least 8 characters");
+  //     return;
+  //   }
 
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
+  //   if (password !== confirmPassword) {
+  //     setError("Passwords do not match");
+  //     return;
+  //   }
 
-    setCreatingPassword(true);
+  //   setCreatingPassword(true);
 
-    try {
-      await createPassword(password);
+  //   try {
+  //     await createPassword(password);
 
-      if (pendingAccount) {
-        addAccount(pendingAccount);
-      }
+  //     if (pendingAccount) {
+  //       addAccount(pendingAccount);
+  //     }
 
-      setPendingAccount(null);
-      setShowPasswordSetup(false);
-      setPassword("");
-      setConfirmPassword("");
-    } catch(err) {
-      setError(err?.message || "Unable to create password");
-    } finally {
-      setCreatingPassword(false);
-    }
-  }
+  //     setPendingAccount(null);
+  //     setShowPasswordSetup(false);
+  //     setPassword("");
+  //     setConfirmPassword("");
+  //   } catch(err) {
+  //     setError(err?.message || "Unable to create password");
+  //   } finally {
+  //     setCreatingPassword(false);
+  //   }
+  // }
 
   return (
     <div className="grid gap-6">
@@ -354,45 +355,17 @@ const onImport = () => {
           )}
 
           {showPasswordSetup && (
-            <div className="rounded-md border border-amber-500 bg-amber-950/30 p-4">
-              <div className="font-semibold text-amber-300">
-                Protect your wallet!
-              </div>
+            <PasswordSetup 
+              message="Create a password before adding your first wallet"
+              onSuccess={() => {
+                if (pendingAccount) {
+                  addAccount(pendingAccount);
+                }
 
-              <div className="mt-2 text-sm text-slate-300">
-                Create a password before adding your first wallet!
-              </div>
-
-              <div className="mt-4 grid gap-3">
-                <div className="grid gap-1">
-                  <Label>Password</Label>
-                  <Input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="At least 8 characters"
-                  />
-                </div>
-
-                <div className="grid gap-1">
-                  <Label>Confirm password</Label>
-                  <Input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Enter the password again"
-                  />
-                </div>
-
-                <Button
-                  type="button"
-                  onClick={handleCreatePassword}
-                  disabled={creatingPassword}
-                >
-                  {creatingPassword ? "Creating password ..." : "Create password"}
-                </Button>
-              </div>
-            </div>
+                setPendingAccount(null);
+                setShowPasswordSetup(false);
+              }}
+            />
           )}
         </CardContent>
 
