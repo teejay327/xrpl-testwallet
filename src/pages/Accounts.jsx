@@ -265,40 +265,7 @@ const onImport = () => {
   const signingAccounts = accounts.filter((a) => a.seed).length;
   const watchOnlyAccounts = accounts.filter((a) => !a.seed).length;
 
-  // const handleCreatePassword = async() => {
-  //     setError("");
-
-  //   if (password.length < 8) {
-  //     setError("Password must have at least 8 characters");
-  //     return;
-  //   }
-
-  //   if (password !== confirmPassword) {
-  //     setError("Passwords do not match");
-  //     return;
-  //   }
-
-  //   setCreatingPassword(true);
-
-  //   try {
-  //     await createPassword(password);
-
-  //     if (pendingAccount) {
-  //       addAccount(pendingAccount);
-  //     }
-
-  //     setPendingAccount(null);
-  //     setShowPasswordSetup(false);
-  //     setPassword("");
-  //     setConfirmPassword("");
-  //   } catch(err) {
-  //     setError(err?.message || "Unable to create password");
-  //   } finally {
-  //     setCreatingPassword(false);
-  //   }
-  // }
-
-  return (
+    return (
     <div className="grid gap-6">
       <Card>
         <CardHeader>
