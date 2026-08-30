@@ -265,7 +265,7 @@ const onImport = () => {
   const signingAccounts = accounts.filter((a) => a.seed).length;
   const watchOnlyAccounts = accounts.filter((a) => !a.seed).length;
 
-    return (
+  return (
     <div className="grid gap-6">
       <Card>
         <CardHeader>
@@ -279,7 +279,7 @@ const onImport = () => {
             <Input 
               value={label} 
               onChange={(e) => setLabel(e.target.value)} 
-              placeholder="First name Family name"
+              placeholder="Firstname Familyname"
               onKeyDown={onKeyDown}
             />
           </div>
