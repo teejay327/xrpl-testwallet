@@ -76,7 +76,10 @@ const LockProvider = ({ children }) => {
     localStorage.getItem(STORAGE_KEYS.hasPassword) === "true"
   );
 
+  const [encryptionKey,setEncryptionKey] = useState(null);
+
   const lockWallet = () => {
+    setEncryptionKey(null);
     setIsLocked(true);
   };
 

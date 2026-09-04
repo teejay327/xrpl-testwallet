@@ -52,7 +52,6 @@ const WalletProvider = ({ children }) => {
    
     setAccounts((prev) => {
       const next = [account, ...prev];
-      // console.log("next account:", next);
       return next;
     });
       
