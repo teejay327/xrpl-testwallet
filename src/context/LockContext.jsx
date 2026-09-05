@@ -58,7 +58,7 @@ const deriveEncryptionKey = async(password, salt) => {
     },
     keyMaterial,
     {
-      name: "AES_GSM",
+      name: "AES_GCM",
       length: 256
     },
     false,
@@ -156,7 +156,7 @@ const LockProvider = ({ children }) => {
     window.addEventListener("mousemove", resetTimer);
     window.addEventListener("keydown", resetTimer);
     window.addEventListener("click", resetTimer);
-    window.addEventListener("touchStart", resetTimer);
+    window.addEventListener("touchstart", resetTimer);
 
     return() => {
       clearTimeout(timer);
@@ -164,7 +164,7 @@ const LockProvider = ({ children }) => {
       window.removeEventListener("mousemove", resetTimer);
       window.removeEventListener("keydown", resetTimer);
       window.removeEventListener("click", resetTimer);
-      window.removeEventListener("touchStart", resetTimer);
+      window.removeEventListener("touchstart", resetTimer);
     };
   }, [isLocked]);
 
