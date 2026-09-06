@@ -176,7 +176,8 @@ const LockProvider = ({ children }) => {
         createPassword,
         verifyPassword,
         lockWallet,
-        unlockWallet
+        unlockWallet,
+        encryptionKey
       }}
     >
       {children}
