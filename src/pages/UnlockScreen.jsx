@@ -5,7 +5,7 @@ import Input from "../components/ui/Input.jsx";
 import Label from "../components/ui/Label.jsx";
 
 const UnlockScreen = () => {
-  const { verifyPassword, unlockWallet } = useLock();
+  const { unlockWallet } = useLock();
 
   const [ password, setPassword ] = useState("");
   const [ error, setError ] = useState("");
@@ -16,15 +16,14 @@ const UnlockScreen = () => {
     setIsUnlocking(true);
 
     try {
-      const isValid = await verifyPassword(password);
+      const success = await unlockWallet(password);
 
-      if (!isValid) {
+      if (!success) {
         setError("Incorrect password");
         setPassword("");
         return;
       }
-
-      unlockWallet();
+      
     } catch(error) {
       console.error("Unlock failed", error);
       setError("Unable to unlock wallet");

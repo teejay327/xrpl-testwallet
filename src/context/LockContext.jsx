@@ -58,7 +58,7 @@ const deriveEncryptionKey = async(password, salt) => {
     },
     keyMaterial,
     {
-      name: "AES_GCM",
+      name: "AES-GCM",
       length: 256
     },
     false,
@@ -83,8 +83,25 @@ const LockProvider = ({ children }) => {
     setIsLocked(true);
   };
 
-  const unlockWallet = () => {
+  const unlockWallet = async(password) => {
+    const isValid = await verifyPassword(password);
+
+    if (!isValid) return false;
+
+    const storedSalt = localStorage.getItem(
+      STORAGE_KEYS.encryptionSalt
+    );
+
+    if (!storedSalt) return false;
+
+    const salt = base64ToBytes(storedSalt);
+
+    const key = await deriveEncryptionKey(password,salt);
+
+    setEncryptionKey(key);
     setIsLocked(false);
+
+    return true;
   };
 
   const createPassword = async(password) => {
