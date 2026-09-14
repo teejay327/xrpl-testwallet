@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { bytesToBase64, base64ToBytes } from '../utils/crypto.js';
+import { bytesToBase64, base64ToBytes, encryptSeed, decryptSeed } from '../utils/crypto.js';
 
 const LockContext = createContext(null);
 
@@ -77,6 +77,27 @@ const LockProvider = ({ children }) => {
   );
 
   const [encryptionKey,setEncryptionKey] = useState(null);
+  
+const testSeedEncryption = async() => {
+  if (!encryptionKey) {
+    console.log("No encryption key available");
+    return;
+  }
+
+  const testSeed = "AdmiralThongclapper123TestSeed";
+
+  const encrypted = await encryptSeed(
+    testSeed,
+    encryptionKey
+  );
+
+  const decrypted = await decryptSeed(
+    encrypted,
+    encryptionKey
+  );
+
+  console.log("Encryption test passed:", decrypted === testSeed);
+}
 
   const lockWallet = () => {
     setEncryptionKey(null);
@@ -137,7 +158,7 @@ const LockProvider = ({ children }) => {
   };
 
   // const testEncryptionRoundTrip = async() => {
-  //   const password = "AdmiralThongclapper123";
+  //   const password = "AdmiralThongclapper123TestSeed";
   //   const testSecret = "test-secret";
   //   const salt = crypto.getRandomValues(new Uint8Array(16));
   //   const key = await deriveEncryptionKey(password, salt);
@@ -149,9 +170,11 @@ const LockProvider = ({ children }) => {
   //   console.log("Decrypted:", decrypted);
   // }
 
-  // useEffect(() => {
-  //   testEncryptionRoundTrip();
-  // },[]);
+  useEffect(() => {     
+    if (encryptionKey) {
+      testSeedEncryption();
+    }
+  },[encryptionKey]);
 
   useEffect(() => {
     if (isLocked) {
