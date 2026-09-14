@@ -78,26 +78,26 @@ const LockProvider = ({ children }) => {
 
   const [encryptionKey,setEncryptionKey] = useState(null);
   
-const testSeedEncryption = async() => {
-  if (!encryptionKey) {
-    console.log("No encryption key available");
-    return;
-  }
+// const testSeedEncryption = async() => {
+//   if (!encryptionKey) {
+//     console.log("No encryption key available");
+//     return;
+//   }
 
-  const testSeed = "AdmiralThongclapper123TestSeed";
+//   const testSeed = "AdmiralThongclapper123TestSeed";
 
-  const encrypted = await encryptSeed(
-    testSeed,
-    encryptionKey
-  );
+//   const encrypted = await encryptSeed(
+//     testSeed,
+//     encryptionKey
+//   );
 
-  const decrypted = await decryptSeed(
-    encrypted,
-    encryptionKey
-  );
+//   const decrypted = await decryptSeed(
+//     encrypted,
+//     encryptionKey
+//   );
 
-  console.log("Encryption test passed:", decrypted === testSeed);
-}
+//   console.log("Encryption test passed:", decrypted === testSeed);
+// }
 
   const lockWallet = () => {
     setEncryptionKey(null);
@@ -133,12 +133,15 @@ const testSeedEncryption = async() => {
     const salt = crypto.getRandomValues(new Uint8Array(16));
     const passwordHash = await derivePasswordHash(password, salt);
     const encryptionSalt = crypto.getRandomValues(new Uint8Array(16));
+    const key = await deriveEncryptionKey(password,encryptionSalt);
 
     localStorage.setItem(STORAGE_KEYS.hasPassword, "true");
     localStorage.setItem(STORAGE_KEYS.passwordSalt, bytesToBase64(salt));
     localStorage.setItem(STORAGE_KEYS.passwordHash, passwordHash);
     localStorage.setItem(STORAGE_KEYS.encryptionSalt, bytesToBase64(encryptionSalt))
 
+    setEncryptionKey(key);
+    console.log("Encryption key created:", !!key);
     setHasPassword(true);
     setIsLocked(false);
   };
