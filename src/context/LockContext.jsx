@@ -141,7 +141,7 @@ const LockProvider = ({ children }) => {
     localStorage.setItem(STORAGE_KEYS.encryptionSalt, bytesToBase64(encryptionSalt))
 
     setEncryptionKey(key);
-    console.log("Encryption key created:", !!key);
+    console.log("Encryption key created is:", !!key);
     setHasPassword(true);
     setIsLocked(false);
   };
