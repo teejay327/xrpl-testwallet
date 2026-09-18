@@ -173,12 +173,6 @@ const LockProvider = ({ children }) => {
   //   console.log("Decrypted:", decrypted);
   // }
 
-  useEffect(() => {     
-    if (encryptionKey) {
-      testSeedEncryption();
-    }
-  },[encryptionKey]);
-
   useEffect(() => {
     if (isLocked) {
       return;
