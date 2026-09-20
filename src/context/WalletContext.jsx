@@ -1,4 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useLock } from "./LockContext.jsx";
+import { encryptSeed } from "../utils/crypto.js";
 
 const WalletContext = createContext(null);
 
@@ -6,6 +8,8 @@ const LS_ACCOUNTS = "xrpl_accounts_v1";
 const LS_ACTIVE = "xrpl_active_account_v1";
 
 const WalletProvider = ({ children }) => {
+  const { encryptionKey } = useLock();
+
   const [accounts, setAccounts] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem(LS_ACCOUNTS) || "[]");
@@ -48,7 +52,31 @@ const WalletProvider = ({ children }) => {
     return accounts.find((a) => a.id === activeId) || null;
   }, [accounts, activeId]);
     
-  const addAccount = (account) => {
+  const addAccount = async(account) => {
+    let accountToStore = account;
+
+    if (account.seed) {
+      if (!encryptionKey) {
+        throw new Error("Wallet must be unlocked before storing a signing account");
+
+        const encryptedSeed = await encryptSeed(
+          account.seed,
+          encryptionKey
+        );
+
+        const { seed, ...accountWithoutSeed } = account;
+        accountToStore = {
+          ...accountWithoutSeed,
+          encryptedSeed
+        };
+      }
+
+      setAccounts((prev) => {
+        return [accountToStore, ...prev];
+      });
+
+      setActiveId(accountToStore.id);
+    }
    
     setAccounts((prev) => {
       const next = [account, ...prev];
