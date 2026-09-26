@@ -24,9 +24,8 @@ const [balances,setBalances] = useState({});
 const [loadingBalances,setLoadingBalances] = useState(false);
 const [pendingAccount, setPendingAccount] = useState(null);
 const [showPasswordSetup, setShowPasswordSetup] = useState(false);
-// const [password, setPassword] = useState("");
-// const [confirmPassword, setConfirmPassword] = useState("");
-// const [creatingPassword, setCreatingPassword] = useState(false);
+
+const canSign = (account) => Boolean(account.seed || account.encryptedSeed);
 
 const fileInputRef = useRef(null);
 const { hasPassword } = useLock();
@@ -289,7 +288,7 @@ const onImport = () => {
             <Input 
               value={address} 
               onChange={(e) => setAddress(e.target.value)} 
-              placeholder="r12345678..."
+              placeholder="r1234567..."
               onKeyDown={onKeyDown}
             />
           </div>
