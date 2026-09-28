@@ -261,8 +261,8 @@ const onImport = () => {
   });
 
   const totalAccounts = accounts.length;
-  const signingAccounts = accounts.filter((a) => a.seed).length;
-  const watchOnlyAccounts = accounts.filter((a) => !a.seed).length;
+  const signingAccounts = accounts.filter((a) => canSign(a)).length;
+  const watchOnlyAccounts = accounts.filter((a) => !canSign(a)).length;
 
   return (
     <div className="grid gap-6">
@@ -446,7 +446,7 @@ const onImport = () => {
                       </span>
                     )}
 
-                    {a.seed ? (
+                    {canSign ? (
                       <span className="text-emerald-400 text-[10px] border border-emerald-500/40 px-1 rounded">
                         Can send
                       </span>
