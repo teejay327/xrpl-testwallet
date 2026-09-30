@@ -446,7 +446,7 @@ const onImport = () => {
                       </span>
                     )}
 
-                    {canSign ? (
+                    {canSign(a) ? (
                       <span className="text-emerald-400 text-[10px] border border-emerald-500/40 px-1 rounded">
                         Can send
                       </span>
@@ -454,7 +454,7 @@ const onImport = () => {
                       <span className="text-amber-400 text-[10px] border border-amber-500/40 px-1 rounded">
                         Watch only
                       </span>
-                    )}            a.seed to can
+                    )}
                   </div>
 
                   <div className="text-xs text-slate-300">{short(a.address)}</div>
