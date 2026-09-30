@@ -8,6 +8,7 @@ import { getBalance } from "../xrpl/client.js";
 import { isValidClassicAddress, Wallet  } from "xrpl";
 import { useLock } from "../context/LockContext.jsx";
 import PasswordSetup from "../components/PasswordSetup.jsx";
+import { decryptSeed } from "../utils/crypto.js";
 
 const short = (s) => (s ? `${s.slice(0,6)}...${s.slice(-6)}` : "");
 
@@ -24,11 +25,12 @@ const [balances,setBalances] = useState({});
 const [loadingBalances,setLoadingBalances] = useState(false);
 const [pendingAccount, setPendingAccount] = useState(null);
 const [showPasswordSetup, setShowPasswordSetup] = useState(false);
+const [revealedSeed, setRevealedSeed] = useState("");
 
 const canSign = (account) => Boolean(account.seed || account.encryptedSeed);
 
 const fileInputRef = useRef(null);
-const { hasPassword } = useLock();
+const { hasPassword, encryptionKey } = useLock();
 
 const trimmedAddress = address.trim();
 const trimmedSeed = seed.trim();
@@ -123,25 +125,78 @@ const onImport = () => {
     };
   };
 
-  const toggleReveal = (id) => {
-    setRevealedId((prev) => {
-      const next = prev === id ? null : id;
-    
-      if (next) {
-        setTimeout(() => {
-          setRevealedId((current) => {
-            current === id ? null : current
-          });
-        }, 10000);
+  const toggleReveal = async(account) => {
+    if (revealedId === account.id) {
+      setRevealedId(null);
+      setRevealedSeed("");
+      return;
+    }
+
+    let seedToReveal = "";
+
+    if (account.encryptedSeed) {
+      if (!encryptionKey) {
+        console.error("Encryption key is not avaialable");
+        return;
       }
-      return next;
-    });
+
+      seedToReveal = await decryptSeed(
+        account.encryptedSeed,
+        encryptionKey
+      );
+    } else if (account.seed) {
+      seedToReveal = account.seed;
+    } else {
+      return;
+    }
+
+    setRevealedSeed(seedToReveal);
+    setRevealedId(account.id);
+
+    setTimeout(() => {
+      setRevealedId(null);
+      setRevealedSeed("");
+    }, 10000);
+   
+   
+   
+   
+    // setRevealedId((prev) => {
+    //   const next = prev === id ? null : id;
+    
+    //   if (next) {
+    //     setTimeout(() => {
+    //       setRevealedId((current) => {
+    //         current === id ? null : current
+    //       });
+    //     }, 10000);
+    //   }
+    //   return next;
+    // });
   };
 
-  const copySeed = async(seed, id) => {
+  const copySeed = async(account) => {
     try {
-      await navigator.clipboard.writeText(seed);
-      setCopiedId(id);
+      let seedToCopy = "";
+
+      if (account.encryptedSeed) {
+        if (!encryptionKey) {
+          console.error("Encryption key is not avaialble");
+          return;
+        }
+
+        seedToCopy = await decryptSeed(
+          account.encryptedSeed,
+          encryptionKey
+        );
+      } else if (account.seed) {
+        seedToCopy = account.seed;
+      } else {
+        return;
+      }
+      
+      await navigator.clipboard.writeText(seedToCopy);
+      setCopiedId(account.id);
 
       setTimeout(() => {
         setCopiedId(null);
@@ -470,14 +525,14 @@ const onImport = () => {
                     }
                   </div>
 
-                  {a.seed && revealedId === a.id && (
+                  {canSign(a) && revealedId === a.id && (
                     <div className="mt-2 rounded-md border border-amber-500/30 bg-amber-500/10 
                       p-2 text-xs break-all text-amber-200">
-                        {a.seed}
+                        {revealedSeed}
                     </div>
                   )}
 
-                  {a.seed && (
+                  {canSign(a) && (
                     <div className="mt-1 text-[11px] text-amber-400">
                       Generated in app
                     </div>
@@ -498,7 +553,7 @@ const onImport = () => {
                       <button
                         type="button"
                         className="text-xs text-amber-400 hover:text-amber-200"
-                        onClick={() => toggleReveal(a.id)}
+                        onClick={() => toggleReveal(a)}
                       >
                         {revealedId === a.id ? "Hide seed" : "Reveal seed"}
                       </button>
@@ -506,7 +561,7 @@ const onImport = () => {
                       <button
                         type="button"
                         className="text-xs text-amber-400 hover:text-amber-200"
-                        onClick={() => copySeed(a.seed, a.id)}
+                        onClick={() => copySeed(a)}
                       >
                         {copiedId === a.id ? "Copied!" : "Copy seed"}
                       </button>
