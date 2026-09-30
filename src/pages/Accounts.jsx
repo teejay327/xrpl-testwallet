@@ -46,7 +46,7 @@ const onClear = () => {
   setError("");
 }
 
-const addAccountWithLockCheck = (account) => {
+const addAccountWithLockCheck = async (account) => {
   const isFirstAccount = accounts.length === 0 && !hasPassword;
 
   if (isFirstAccount) {
@@ -56,11 +56,10 @@ const addAccountWithLockCheck = (account) => {
     return;
   }
 
-  addAccount(account);
+  await addAccount(account);
 }
 
 const onAdd = () => {
-
   const accountToAdd = {
     id: crypto.randomUUID(),
     label: trimmedLabel || "Watch Account",
@@ -72,15 +71,13 @@ const onAdd = () => {
     return;
   }
 
-setError("");
+  setError("");
 
   addAccountWithLockCheck(accountToAdd);
-
   onClear();
 };
 
-const onGenerate = () => {
-    
+const onGenerate = () => {  
   const wallet = Wallet.generate();
   
   const accountToAdd = {
@@ -157,22 +154,6 @@ const onImport = () => {
       setRevealedId(null);
       setRevealedSeed("");
     }, 10000);
-   
-   
-   
-   
-    // setRevealedId((prev) => {
-    //   const next = prev === id ? null : id;
-    
-    //   if (next) {
-    //     setTimeout(() => {
-    //       setRevealedId((current) => {
-    //         current === id ? null : current
-    //       });
-    //     }, 10000);
-    //   }
-    //   return next;
-    // });
   };
 
   const copySeed = async(account) => {
@@ -309,6 +290,22 @@ const onImport = () => {
     loadBalances();
   }, [accounts]);
 
+  useEffect(() => {
+    if (!pendingAccount || !encryptionKey) {
+      return;
+    }
+
+    const storePendingAccount = async() => {
+      try {
+        await addAccount(pendingAccount);
+        setPendingAccount(null);
+      } catch(err) {
+        console.error("Failed to store pending account:", err);
+      }
+    };
+    storePendingAccount();
+  }, [pendingAccount, encryptionKey]);
+
   const sortedAccounts = [...accounts].sort((a,b) => {
     if (a.id === activeId) return -1;
     if (b.id === activeId) return 1;
@@ -380,11 +377,11 @@ const onImport = () => {
               message="Create a password before adding your first wallet"
               onSuccess={() => {
                 if (pendingAccount) {
-                  addAccount(pendingAccount);
+                  setShowPasswordSetup(false);
+                  // addAccount(pendingAccount);
                 }
-
-                setPendingAccount(null);
-                setShowPasswordSetup(false);
+                // setPendingAccount(null);
+                // setShowPasswordSetup(false);
               }}
             />
           )}
