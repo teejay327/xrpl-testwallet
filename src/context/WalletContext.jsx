@@ -58,19 +58,20 @@ const WalletProvider = ({ children }) => {
     if (account.seed) {
       if (!encryptionKey) {
         throw new Error("Wallet must be unlocked before storing a signing account");
-
-        const encryptedSeed = await encryptSeed(
+      }
+        
+      const encryptedSeed = await encryptSeed(
           account.seed,
           encryptionKey
         );
 
-        const { seed, ...accountWithoutSeed } = account;
-        accountToStore = {
+      const { seed, ...accountWithoutSeed } = account;
+        
+      accountToStore = {
           ...accountWithoutSeed,
           encryptedSeed
-        };
-      }
-
+       };
+      
       setAccounts((prev) => {
         return [accountToStore, ...prev];
       });
