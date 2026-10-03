@@ -71,20 +71,13 @@ const WalletProvider = ({ children }) => {
           ...accountWithoutSeed,
           encryptedSeed
        };
-      
-      setAccounts((prev) => {
-        return [accountToStore, ...prev];
-      });
-
-      setActiveId(accountToStore.id);
     }
-   
-    setAccounts((prev) => {
-      const next = [account, ...prev];
-      return next;
-    });
       
-    setActiveId(account.id);
+    setAccounts((prev) => {
+      return [accountToStore, ...prev];
+    });
+
+    setActiveId(accountToStore.id); 
   };
 
   const removeAccount = (id) => {
