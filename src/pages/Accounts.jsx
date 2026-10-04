@@ -545,7 +545,7 @@ const onImport = () => {
                     {copiedAddressId === a.id ? "Copied!" : "Copy address"}
                   </button>
 
-                  {a.seed && (
+                  {canSign(a) && (
                     <>
                       <button
                         type="button"
