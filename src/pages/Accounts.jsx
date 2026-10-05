@@ -353,10 +353,6 @@ const onImport = () => {
               placeholder="sEd..."
               onKeyDown={onKeyDown}
             />
-
-            <div className="text-xs text-slate-400">
-              Seed state: {seed || "(empty)"}
-            </div>
           </div>
 
 
