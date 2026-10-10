@@ -5,6 +5,8 @@ import Label from "../components/ui/Label.jsx";
 import Input from "../components/ui/Input.jsx";
 import { getBalance } from "../xrpl/client.js";
 import { useWallet } from "../context/WalletContext.jsx";
+import { useLock } from "../context/LockContext.jsx";
+import { decryptSeed } from "../utils/crypto.js";
 import sendXrp from "../xrpl/sendXrp.js";
 import getTransactions from "../xrpl/history.js";
 import normaliseTransaction from "../lib/normaliseTransaction.js";
@@ -14,6 +16,7 @@ const short = s => (s ? `${s.slice(0, 6)}...${s.slice(-6)}` : "");
 
 const Dashboard = () => {
   const { activeAccount, accounts } = useWallet();
+  const { encryptionKey } = useLock();
 
   const [balance,setBalance] = useState(null);
   const [loading,setLoading] = useState(false);
@@ -53,8 +56,10 @@ const Dashboard = () => {
 
   const handleSend = async() => {
     console.log("Sending XRP...");
-    if (!activeAccount?.seed) {
-      console.error("No seed on active account");
+    if (!activeAccount?.seed && !activeAccount?.encryptedSeed) {
+      setTxType("error");
+      setTxMessage("This account cannot sign transactions");
+      setTxHash("");
       return;
     }
 
@@ -95,8 +100,20 @@ const Dashboard = () => {
       setTxMessage("");
       setTxHash("");
 
+      let seedForSigning = activeAccount.seed;
+
+      if (activeAccount.encryptedSeed) {
+        if (!encryptionKey) {
+          throw new Error("Wallet is locked = please unlock before sending");
+        }
+        seedForSigning = await decryptSeed(
+          activeAccount.encryptedSeed,
+          encryptionKey
+        );
+      }
+
       const hash = await sendXrp({
-        seed: activeAccount.seed,
+        seed: seedForSigning,
         destination: trimmedDestination,
         amount: amount.trim()
       });
@@ -238,12 +255,13 @@ const Dashboard = () => {
 
                   <span
                     className={
-                      activeAccount?.seed
+                      activeAccount?.seed || activeAccount?.encryptedSeed
                         ? "rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] text-emerald-300 ring-1 ring-emerald-500/30"
                         : "rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] text-amber-300 ring-1 ring-amber-500/30"
                     }
                   >
-                    {activeAccount?.seed ? "Can send" : "Watch only"}
+                    {activeAccount?.seed || activeAccount?.encryptedSeed 
+                      ? "Can send" : "Watch only"}
                   </span>
                 </div>
 
@@ -266,7 +284,7 @@ const Dashboard = () => {
                   )}
                 </div>
 
-                {!activeAccount?.seed && (
+                {!(activeAccount?.seed || activeAccount?.encryptedSeed) && (
                   <div className="mt-2 text-xs text-amber-400">
                     Watch-only account - sending is disabled
                   </div>
@@ -302,9 +320,10 @@ const Dashboard = () => {
                 </div>
 
                 <Button onClick={handleSend} 
-                  disabled={sending || !activeAccount?.seed
+                  disabled={sending ||
+                    !(activeAccount?.seed || activeAccount?.encryptedSeed)
                 }>
-                  {!activeAccount?.seed 
+                  {!(activeAccount?.seed || activeAccount?.encryptedSeed)
                     ? "Watch-only account" 
                     : sending 
                     ? "Sending ..." 
