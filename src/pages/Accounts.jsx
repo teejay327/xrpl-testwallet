@@ -364,7 +364,7 @@ const onImport = () => {
 
           {!hasPassword && !showPasswordSetup && (
             <Button onClick={() => setShowPasswordSetup(true)}>
-              Create temporary wallet password
+              Create a temporary wallet password
             </Button>
           )}
 
