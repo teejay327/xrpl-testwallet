@@ -2,6 +2,8 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useLock } from "./LockContext.jsx";
 import { encryptSeed } from "../utils/crypto.js";
 
+const isLegacySigningAccount = (account) => Boolean(account?.seed && !account?.encryptedSeed);
+
 const WalletContext = createContext(null);
 
 const LS_ACCOUNTS = "xrpl_accounts_v1";
