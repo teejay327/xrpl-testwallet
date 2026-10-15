@@ -387,7 +387,7 @@ const onImport = () => {
 
         <CardFooter className="flex flex-wrap gap-3">
           <Button onClick={onAdd} disabled={!canAdd}>
-            Add watch-only account - can receive XRP but not send.
+            Add watch-only account - can receive but not send XRP
           </Button>
 
           <Button variant="secondary" onClick={onGenerate}>
