@@ -11,6 +11,7 @@ const LS_ACTIVE = "xrpl_active_account_v1";
 
 const WalletProvider = ({ children }) => {
   const { encryptionKey } = useLock();
+  const [migrationPendng, setMigrationPending] = useState(false);
 
   const [accounts, setAccounts] = useState(() => {
     try {
@@ -36,6 +37,15 @@ const WalletProvider = ({ children }) => {
       setActiveId(null);
     }
   }, []);
+
+  useEffect(() => {
+    const hasLegacyAccounts = accounts.some(isLegacySigningAccount);
+    setMigrationPending(hasLegacyAccounts);
+  }, [accounts]);
+  
+  useEffect(() => {
+    localStorage.setItem(LS_ACCOUNTS, JSON.stringify(accounts));
+  }, [accounts]);
 
   // Persist
   useEffect(() => {
