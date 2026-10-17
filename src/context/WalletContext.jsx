@@ -1,8 +1,24 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useLock } from "./LockContext.jsx";
 import { encryptSeed } from "../utils/crypto.js";
 
 const isLegacySigningAccount = account => Boolean(account?.seed);
+ const encryptLegacyAccount = async(account, encryptionKey) => {
+    if (!account?.seed) return account;
+
+    if (!encryptionKey) {
+      throw new Error("Cannot migrate a signing account while the wallet is locked");
+    }
+
+    if (account.encryptedSeed) {
+      throw new Error("Account contains both seed formats - manual verification required");
+    }
+
+    const encryptedSeed = await encryptSeed(account.seed, encryptionKey);
+    const { seed, ...accountWithoutSeed } = account;
+
+    return { ...accountWithoutSeed, encryptedSeed};
+  }
 
 const WalletContext = createContext(null);
 
@@ -12,6 +28,7 @@ const LS_ACTIVE = "xrpl_active_account_v1";
 const WalletProvider = ({ children }) => {
   const { encryptionKey } = useLock();
   const [migrationPending, setMigrationPending] = useState(false);
+  const migrationInProgress = useRef(false);
 
   const [accounts, setAccounts] = useState(() => {
     try {
@@ -67,23 +84,6 @@ const WalletProvider = ({ children }) => {
   const activeAccount = useMemo(() => {
     return accounts.find((a) => a.id === activeId) || null;
   }, [accounts, activeId]);
-    
-  const encryptLegacyAccount = async(account, encryptionKey) => {
-    if (!account?.seed) return account;
-
-    if (!encryptionKey) {
-      throw new Error("Cannot migrate a signing account while the wallet is locked");
-    }
-
-    if (account.encryptedSeed) {
-      throw new Error("Account contains both seed formats - manual verification required");
-    }
-
-    const encryptedSeed = await encryptSeed(account.seed, encryptionKey);
-    const { seed, ...accountWithoutSeed } = account;
-
-    return { ...accountWithoutSeed, encryptedSeed};
-  }
 
   const addAccount = async(account) => {
     let accountToStore = account;
