@@ -15,7 +15,8 @@ const WalletProvider = ({ children }) => {
 
   const [accounts, setAccounts] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem(LS_ACCOUNTS) || "[]");
+      const stored = JSON.parse(localStorage.getItem(LS_ACCOUNTS) || "[]");
+      return Array.isArray(stored) ? stored : [];
     } catch {
       return [];
     }
@@ -49,6 +50,10 @@ const WalletProvider = ({ children }) => {
 
   // Persist
   useEffect(() => {
+    if (accounts.some(isLegacySigningAccount)) {
+      return;
+    }
+    
     localStorage.setItem(LS_ACCOUNTS, JSON.stringify(accounts));
   }, [accounts]);
 
