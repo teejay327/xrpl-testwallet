@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useLock } from "./LockContext.jsx";
 import { encryptSeed } from "../utils/crypto.js";
 
-const isLegacySigningAccount = account => Boolean(account?.seed && !account?.encryptedSeed);
+const isLegacySigningAccount = account => Boolean(account?.seed);
 
 const WalletContext = createContext(null);
 
@@ -11,7 +11,7 @@ const LS_ACTIVE = "xrpl_active_account_v1";
 
 const WalletProvider = ({ children }) => {
   const { encryptionKey } = useLock();
-  const [migrationPendng, setMigrationPending] = useState(false);
+  const [migrationPending, setMigrationPending] = useState(false);
 
   const [accounts, setAccounts] = useState(() => {
     try {
@@ -23,29 +23,28 @@ const WalletProvider = ({ children }) => {
   });
 
   const [activeId, setActiveId ] = useState(() => {
-    return localStorage.getItem(LS_ACTIVE) || null;
-  });
+    const savedActiveId = localStorage.getItem(LS_ACTIVE);
 
-  // Load from localStorage
-  useEffect(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem(LS_ACCOUNTS) || "[]");
-      const active = localStorage.getItem(LS_ACTIVE);
-      setAccounts(saved);
-      setActiveId(active || saved?.[0]?.id || null);
-    } catch {
-      setAccounts([]);
-      setActiveId(null);
+    if (savedActiveId) {
+      return savedActiveId
     }
-  }, []);
+
+    try {
+      const savedAccounts = JSON.parse(
+        localStorage.getItem(LS_ACCOUNTS) || "[]"
+      );
+
+      return Array.isArray(savedAccounts) 
+        ? savedAccounts[0]?.id || null 
+        : null;
+    } catch {
+      return null;
+    }
+  });
 
   useEffect(() => {
     const hasLegacyAccounts = accounts.some(isLegacySigningAccount);
     setMigrationPending(hasLegacyAccounts);
-  }, [accounts]);
-  
-  useEffect(() => {
-    localStorage.setItem(LS_ACCOUNTS, JSON.stringify(accounts));
   }, [accounts]);
 
   // Persist
@@ -53,7 +52,7 @@ const WalletProvider = ({ children }) => {
     if (accounts.some(isLegacySigningAccount)) {
       return;
     }
-    
+
     localStorage.setItem(LS_ACCOUNTS, JSON.stringify(accounts));
   }, [accounts]);
 
@@ -69,6 +68,23 @@ const WalletProvider = ({ children }) => {
     return accounts.find((a) => a.id === activeId) || null;
   }, [accounts, activeId]);
     
+  const encryptLegacyAccount = async(account, encryptionKey) => {
+    if (!account?.seed) return account;
+
+    if (!encryptionKey) {
+      throw new Error("Cannot migrate a signing account while the wallet is locked");
+    }
+
+    if (account.encryptedSeed) {
+      throw new Error("Account contains both seed formats - manual verification required");
+    }
+
+    const encryptedSeed = await encryptSeed(account.seed, encryptionKey);
+    const { seed, ...accountWithoutSeed } = account;
+
+    return { ...accountWithoutSeed, encryptedSeed};
+  }
+
   const addAccount = async(account) => {
     let accountToStore = account;
 
