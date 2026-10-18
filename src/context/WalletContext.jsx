@@ -39,6 +39,8 @@ const WalletProvider = ({ children }) => {
     }
   });
 
+  const accountsRef = useRef(accounts);
+
   const [activeId, setActiveId ] = useState(() => {
     const savedActiveId = localStorage.getItem(LS_ACTIVE);
 
@@ -159,6 +161,10 @@ const WalletProvider = ({ children }) => {
 
         if (account.seed && account.encryptedSeed) {
           throw new Error("Acount contains both seed formats - verification required");
+        }
+
+        if (account.seed) {
+          return encryptLegacyAccount();
         }
 
         return account;

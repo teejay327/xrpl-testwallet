@@ -215,8 +215,16 @@ const onImport = () => {
     if (!file) return;
     const text = await file.text();
     
-    const importedAccounts = JSON.parse(text);
-    
+    let importedAccounts;
+
+    try {
+      importedAccounts = JSON.parse(text);
+    } catch(error) {
+      console.error("Invalid backup JSON:", error);
+      alert("Import failed - selected file min not valid JSON.");
+      return;
+    }
+
     if (!Array.isArray(importedAccounts)) {
       console.error("Imported backup is not an array");
       return;
@@ -238,8 +246,13 @@ const onImport = () => {
 
     console.log("New accounts:", newAccounts.length);
 
-    await importAccounts(newAccounts);
-    console.log("Imported:", newAccounts.length, "new accounts");
+    try {
+      await importAccounts(newAccounts);
+      console.log("Import completed:", newAccounts.length, "new accounts");
+    } catch(error) {
+      console.error("Account import failed");
+      alert("Import failed - no new accounts were added.")
+    }
 
     const mergedAccounts = [...accounts, ...newAccounts];
     console.log("Merged accounts:", mergedAccounts.length);
