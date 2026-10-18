@@ -238,7 +238,7 @@ const onImport = () => {
 
     console.log("New accounts:", newAccounts.length);
 
-    importAccounts(newAccounts);
+    await importAccounts(newAccounts);
     console.log("Imported:", newAccounts.length, "new accounts");
 
     const mergedAccounts = [...accounts, ...newAccounts];

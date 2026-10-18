@@ -3,22 +3,22 @@ import { useLock } from "./LockContext.jsx";
 import { encryptSeed } from "../utils/crypto.js";
 
 const isLegacySigningAccount = account => Boolean(account?.seed);
- const encryptLegacyAccount = async(account, encryptionKey) => {
-    if (!account?.seed) return account;
+const encryptLegacyAccount = async(account, encryptionKey) => {
+  if (!account?.seed) return account;
 
-    if (!encryptionKey) {
-      throw new Error("Cannot migrate a signing account while the wallet is locked");
-    }
+  if (!encryptionKey) {
+    throw new Error("Cannot migrate a signing account while the wallet is locked");
+  }
 
-    if (account.encryptedSeed) {
-      throw new Error("Account contains both seed formats - manual verification required");
-    }
+  if (account.encryptedSeed) {
+    throw new Error("Account contains both seed formats - manual verification required");
+  }
 
-    const encryptedSeed = await encryptSeed(account.seed, encryptionKey);
-    const { seed, ...accountWithoutSeed } = account;
+  const encryptedSeed = await encryptSeed(account.seed, encryptionKey);
+  const { seed, ...accountWithoutSeed } = account;
 
     return { ...accountWithoutSeed, encryptedSeed};
-  }
+}
 
 const WalletContext = createContext(null);
 
@@ -146,12 +146,37 @@ const WalletProvider = ({ children }) => {
     URL.revokeObjectURL(url);
   }
 
-  const importAccounts = (accountsToImport) => {
-    setAccounts((currentAccounts) => {
-      const existingAddresses = currentAccounts.map((account) => account.address);
+  const importAccounts = async(accountsToImport) => {
+    if (!Array.isArray(accountsToImport)) {
+      throw new Error("Invalid account import");
+    }
 
-      const newAccounts = accountsToImport.filter((account) => {
-        return !existingAddresses.includes(account.address);
+    const securedAccounts = await Promise.all(
+      accountsToImport.map(async(account) => {
+        if (!account || typeof account !== "object") {
+          throw new Error("Invlaid account record");
+        }
+
+        if (account.seed && account.encryptedSeed) {
+          throw new Error("Acount contains both seed formats - verification required");
+        }
+
+        return account;
+      })
+    );
+
+    setAccounts((currentAccounts) => {
+      const existingAddresses = new Set(
+        currentAccounts.map((account) => account.address)
+      );
+      
+      const newAccounts = securedAccounts.filter((account) => {
+        if (existingAddresses.has(account.address)) {
+          return false;
+        }
+        
+        existingAddresses.add(account.address);
+        return true;
       });
       return [...currentAccounts, ...newAccounts];
     });
