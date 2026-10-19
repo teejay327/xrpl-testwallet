@@ -20,6 +20,16 @@ const encryptLegacyAccount = async(account, encryptionKey) => {
     return { ...accountWithoutSeed, encryptedSeed};
 }
 
+const accountsUnchanged = (originalAccounts, currentAccounts) => {
+  if (originalAccounts.length !== currentAccounts.length) {
+    return false;
+  }
+
+  return originalAccounts.every(
+    (account, index) => account === currentAccounts[index]
+  );
+};
+
 const WalletContext = createContext(null);
 
 const LS_ACCOUNTS = "xrpl_accounts_v1";
@@ -40,6 +50,9 @@ const WalletProvider = ({ children }) => {
   });
 
   const accountsRef = useRef(accounts);
+  useEffect(() => {
+    accountsRef.current = accounts;
+  },[accounts]);
 
   const [activeId, setActiveId ] = useState(() => {
     const savedActiveId = localStorage.getItem(LS_ACTIVE);
@@ -65,6 +78,43 @@ const WalletProvider = ({ children }) => {
     const hasLegacyAccounts = accounts.some(isLegacySigningAccount);
     setMigrationPending(hasLegacyAccounts);
   }, [accounts]);
+
+  useEffect(() => {
+    if (!migrationPending || !encryptionKey) return;
+    if (migrationInProgress.current) return;
+    let cancelled = false;
+
+    const migrate = async() => {
+      migrationInProgress.current = true;
+      const originalAccounts = accountsRef.current;
+      try {
+        const migratedAccounts = await Promise.all(
+          originalAccounts.map((acount) => {
+            return encryptLegacyAccount(account, encryptionKey)
+          })
+        );
+
+        if (cancelled) return;
+
+        if (!accountsUnchanged(originalAccounts, accountsRef.current)) {
+          console.warn("Accounts changed during migration - retry required");
+          return;
+        }
+
+        setAccounts(migratedAccounts);
+      } catch(error) {
+        console.error("Legacy account migration failed",error);
+      } finally {
+        migrationInProgress.current = false;
+      }
+    };
+
+    migrate();
+
+    return() => {
+      cancelled = true;
+    }
+  }, [migrationPending, encryptionKey]);
 
   // Persist
   useEffect(() => {
