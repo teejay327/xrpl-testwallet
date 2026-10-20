@@ -39,6 +39,7 @@ const WalletProvider = ({ children }) => {
   const { encryptionKey } = useLock();
   const [migrationPending, setMigrationPending] = useState(false);
   const migrationInProgress = useRef(false);
+  const [migrationRetry, setMigrationRetry] = useState(0);
 
   const [accounts, setAccounts] = useState(() => {
     try {
@@ -89,7 +90,7 @@ const WalletProvider = ({ children }) => {
       const originalAccounts = accountsRef.current;
       try {
         const migratedAccounts = await Promise.all(
-          originalAccounts.map((acount) => {
+          originalAccounts.map((account) => {
             return encryptLegacyAccount(account, encryptionKey)
           })
         );
@@ -106,6 +107,19 @@ const WalletProvider = ({ children }) => {
         console.error("Legacy account migration failed",error);
       } finally {
         migrationInProgress.current = false;
+
+        const accountsChanged = !accountsUnchanged(
+          originalAccounts,
+          accountsRef.current
+        );
+
+        if (
+          !cancelled &&
+          accountsChanged &&
+          accountsRef.current.some(isLegacySigningAccount)
+        ) {
+          setMigrationRetry((count) => count + 1);
+        }
       }
     };
 
@@ -114,7 +128,7 @@ const WalletProvider = ({ children }) => {
     return() => {
       cancelled = true;
     }
-  }, [migrationPending, encryptionKey]);
+  }, [migrationPending, encryptionKey, migrationRetry ]);
 
   // Persist
   useEffect(() => {
