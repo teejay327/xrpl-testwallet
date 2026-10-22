@@ -104,7 +104,7 @@ const WalletProvider = ({ children }) => {
 
         setAccounts(migratedAccounts);
       } catch(error) {
-        console.error("Legacy account migration failed",error);
+        console.error("Legacy account migration failed",error.message);
       } finally {
         migrationInProgress.current = false;
 
