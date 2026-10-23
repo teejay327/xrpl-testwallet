@@ -207,7 +207,11 @@ const WalletProvider = ({ children }) => {
     const securedAccounts = await Promise.all(
       accountsToImport.map(async(account) => {
         if (!account || typeof account !== "object") {
-          throw new Error("Invlaid account record");
+          throw new Error("Invalid account record");
+        }
+
+        if (typeof account.address !== "string" || !account.address.trim()) {
+          throw new Error("Imported account is missing a valid address");
         }
 
         if (account.seed && account.encryptedSeed) {
@@ -215,7 +219,7 @@ const WalletProvider = ({ children }) => {
         }
 
         if (account.seed) {
-          return encryptLegacyAccount();
+          return encryptLegacyAccount(account, encryptionKey);
         }
 
         return account;
