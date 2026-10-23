@@ -38,8 +38,6 @@ const LS_ACTIVE = "xrpl_active_account_v1";
 const WalletProvider = ({ children }) => {
   const { encryptionKey } = useLock();
   const [migrationPending, setMigrationPending] = useState(false);
-  const migrationInProgress = useRef(false);
-  const [migrationRetry, setMigrationRetry] = useState(0);
 
   const [accounts, setAccounts] = useState(() => {
     try {
@@ -82,43 +80,32 @@ const WalletProvider = ({ children }) => {
 
   useEffect(() => {
     if (!migrationPending || !encryptionKey) return;
-    if (migrationInProgress.current) return;
+
     let cancelled = false;
 
     const migrate = async() => {
-      migrationInProgress.current = true;
       const originalAccounts = accountsRef.current;
+
       try {
         const migratedAccounts = await Promise.all(
           originalAccounts.map((account) => {
-            return encryptLegacyAccount(account, encryptionKey)
+            encryptLegacyAccount(account, encryptionKey)
           })
         );
 
         if (cancelled) return;
 
-        if (!accountsUnchanged(originalAccounts, accountsRef.current)) {
-          console.warn("Accounts changed during migration - retry required");
-          return;
-        }
+        setAccounts((currentAccounts) => {
+          if (!accountsUnchanged(originalAccounts, currentAccounts)) {
+            console.warn("Accounts changed during migration - skipping stale result");
+            return currentAccounts;
+          }
 
-        setAccounts(migratedAccounts);
+          return migratedAccounts;
+        });
       } catch(error) {
-        console.error("Legacy account migration failed",error.message);
-      } finally {
-        migrationInProgress.current = false;
-
-        const accountsChanged = !accountsUnchanged(
-          originalAccounts,
-          accountsRef.current
-        );
-
-        if (
-          !cancelled &&
-          accountsChanged &&
-          accountsRef.current.some(isLegacySigningAccount)
-        ) {
-          setMigrationRetry((count) => count + 1);
+        if (!cancelled) {
+          console.error("Legacy account migration failed", error);
         }
       }
     };
@@ -126,9 +113,9 @@ const WalletProvider = ({ children }) => {
     migrate();
 
     return() => {
-      cancelled = true;
-    }
-  }, [migrationPending, encryptionKey, migrationRetry ]);
+      cancelled  = true;
+    }; 
+  }, [migrationPending, encryptionKey, accounts]);
 
   // Persist
   useEffect(() => {
