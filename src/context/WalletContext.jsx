@@ -214,14 +214,26 @@ const WalletProvider = ({ children }) => {
           throw new Error("Imported account is missing a valid address");
         }
 
+        if (typeof account.label !== "string" || !account.label.trim()) {
+          throw new Error("Imported account must have a valid label");
+        }
+
+        if (!xrpl.isValidClassicAddress(account.address)) {
+          throw new Error("Imported account has an invalid XRPL address");
+        }
+
         if (account.seed && account.encryptedSeed) {
           throw new Error("Acount contains both seed formats - verification required");
         }
 
         if (account.seed) {
+          const wallet = xrpl.Wallet.fromSeed(account.seed);
+          if (wallet.classicAddress !== account.address) {
+            throw new Error("Imported seed does not match the account address");
+          }
           return encryptLegacyAccount(account, encryptionKey);
         }
-
+       
         return account;
       })
     );
