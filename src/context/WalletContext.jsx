@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useLock } from "./LockContext.jsx";
 import { encryptSeed } from "../utils/crypto.js";
+import { decryptSeed } from "../utils/crypto.js";
 
 const isLegacySigningAccount = account => Boolean(account?.seed);
 const encryptLegacyAccount = async(account, encryptionKey) => {
@@ -232,6 +233,20 @@ const WalletProvider = ({ children }) => {
             throw new Error("Imported seed does not match the account address");
           }
           return encryptLegacyAccount(account, encryptionKey);
+        }
+
+        if (account.encryptedSeed) {
+          if (!encryptionKey) {
+            throw new Error("unlock wallet before importing encrypted accounts");
+          }
+
+          const decryptedSeed =  await decryptSeed(account.encryptedSeed, encryptionKey);
+
+          const wallet = xrpl.Wallet.fromSeed(decryptedSeed);
+
+          if (wallet.classicAddress !== account.address) {
+            throw new Error("Encrypted seed does not match account address");
+          }
         }
        
         return account;
