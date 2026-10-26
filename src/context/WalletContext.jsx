@@ -49,6 +49,14 @@ const WalletProvider = ({ children }) => {
     }
   });
 
+  console.table(
+    accounts.map((account) => ({
+      label: account.label,
+      encryptedSeedType: typeof account.encryptedSeed,
+      encryptedSeedIsNull: account.encryptedSeed === null
+    }))
+  );
+
   const accountsRef = useRef(accounts);
   useEffect(() => {
     accountsRef.current = accounts;
@@ -188,6 +196,10 @@ const WalletProvider = ({ children }) => {
   };
 
   const exportAccounts = () => {
+    if (accounts.some(isLegacySigningAccount)) {
+      throw new Error("Cannot export wallets while legacy seed migration is pending");
+    }
+
     const data = JSON.stringify(accounts, null, 2);
     const blob = new Blob([data], { type: "application/json"});
     const url = URL.createObjectURL(blob);
