@@ -133,7 +133,7 @@ const onImport = () => {
 
     if (account.encryptedSeed) {
       if (!encryptionKey) {
-        console.error("Encryption key is not avaialable");
+        console.error("Encryption key is not available");
         return;
       }
 
