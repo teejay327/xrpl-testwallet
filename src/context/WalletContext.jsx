@@ -49,14 +49,6 @@ const WalletProvider = ({ children }) => {
     }
   });
 
-  console.table(
-    accounts.map((account) => ({
-      label: account.label,
-      encryptedSeedType: typeof account.encryptedSeed,
-      encryptedSeedIsNull: account.encryptedSeed === null
-    }))
-  );
-
   const accountsRef = useRef(accounts);
   useEffect(() => {
     accountsRef.current = accounts;
