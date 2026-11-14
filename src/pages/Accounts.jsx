@@ -213,6 +213,9 @@ const onImport = () => {
     const file = event.target.files?.[0];
 
     if (!file) return;
+
+    event.target.value = "";
+
     const text = await file.text();
     
     let importedAccounts;
@@ -250,12 +253,9 @@ const onImport = () => {
       await importAccounts(newAccounts);
       console.log("Import completed:", newAccounts.length, "new accounts");
     } catch(error) {
-      console.error("Account import failed");
+      console.error("Account import failed", error);
       alert("Import failed - no new accounts were added.")
     }
-
-    const mergedAccounts = [...accounts, ...newAccounts];
-    console.log("Merged accounts:", mergedAccounts.length);
   }
 
   useEffect(() => {
