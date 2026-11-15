@@ -260,7 +260,7 @@ const onImport = () => {
 
   useEffect(() => {
     const loadBalances = async() => {
-      console.log("Loading balances for", accounts.length, "accounts");
+      console.log("Loading balances for these accounts", accounts.length, "accounts");
       if (accounts.length === 0) {
         setBalances({});
         return;
