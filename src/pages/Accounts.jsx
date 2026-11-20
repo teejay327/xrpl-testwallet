@@ -224,7 +224,7 @@ const onImport = () => {
       importedAccounts = JSON.parse(text);
     } catch(error) {
       console.error("Invalid backup JSON:", error);
-      alert("Import failed - selected file min not valid JSON.");
+      alert("Import failed - selected file not valid JSON");
       return;
     }
 
