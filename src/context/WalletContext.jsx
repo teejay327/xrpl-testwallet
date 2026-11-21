@@ -232,6 +232,10 @@ const WalletProvider = ({ children }) => {
         }
 
         if (account.seed) {
+          if (!encryptionKey) {
+            throw new Error("Unlock wallet before importing signing accounts");
+          }
+
           const wallet = xrpl.Wallet.fromSeed(account.seed);
           if (wallet.classicAddress !== account.address) {
             throw new Error("Imported seed does not match the account address");
