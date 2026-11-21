@@ -239,11 +239,9 @@ const onImport = () => {
 
     console.log("Valid accounts:", validAccounts.length);
 
-    const existingAddresses = accounts.map((account) => account.address);
+    //const existingAddresses = accounts.map((account) => account.address);
 
-    const newAccounts = validAccounts.filter((account) => {
-      return !existingAddresses.includes(account.address);
-    });
+    const newAccounts = validAccounts;
 
     console.log("New accounts:", newAccounts.length);
 
