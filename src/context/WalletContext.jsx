@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState } from 
 import { useLock } from "./LockContext.jsx";
 import { encryptSeed } from "../utils/crypto.js";
 import { decryptSeed } from "../utils/crypto.js";
+import * as xrpl from "xrpl";
 
 const isLegacySigningAccount = account => Boolean(account?.seed);
 const encryptLegacyAccount = async(account, encryptionKey) => {
