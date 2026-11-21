@@ -235,9 +235,7 @@ const onImport = () => {
 
     console.log("Valid account array:", importedAccounts.length);
 
-    const validAccounts = importedAccounts.filter((account) => {
-      return account?.label && account?.address;
-    });
+    const validAccounts = importedAccounts;
 
     console.log("Valid accounts:", validAccounts.length);
 
